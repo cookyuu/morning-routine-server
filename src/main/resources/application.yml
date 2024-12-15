@@ -1,0 +1,7 @@
+spring:
+  spring:
+    application:
+      name: morning-routine-server
+
+  profiles:
+    default: dev
