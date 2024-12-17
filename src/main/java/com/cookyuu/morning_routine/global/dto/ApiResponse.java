@@ -1,5 +1,6 @@
-package com.cookyuu.morning_routine.global.response;
+package com.cookyuu.morning_routine.global.dto;
 
+import com.cookyuu.morning_routine.global.code.ResultCode;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

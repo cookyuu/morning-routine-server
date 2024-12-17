@@ -1,7 +1,8 @@
 package com.cookyuu.morning_routine.global.exception;
 
-import com.cookyuu.morning_routine.global.response.ApiResponse;
-import com.cookyuu.morning_routine.global.response.ResultCode;
+import com.cookyuu.morning_routine.global.dto.ApiResponse;
+import com.cookyuu.morning_routine.global.code.ResultCode;
+import io.lettuce.core.RedisException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
@@ -25,6 +26,26 @@ import java.util.NoSuchElementException;
 @RestControllerAdvice
 @RequiredArgsConstructor
 public class GlobalExceptionHandler {
+    @ExceptionHandler(value = MRException.class)
+    public ResponseEntity<ApiResponse<Object>> handleMRException(WebRequest request, MRException e) {
+        String errMsg = "";
+        if (e.getMessage() == null) {
+            errMsg = e.getResultCode().getMessage();
+        } else {
+            errMsg = e.getMessage();
+        }
+        log.error("[MRException] {}", errMsg);
+        var response = ApiResponse.failure(e.getResultCode(), errMsg);
+        return new ResponseEntity<>(response, e.getResultCode().getStatus());
+    }
+
+    @ExceptionHandler(value = RedisException.class)
+    public ResponseEntity<ApiResponse<Object>> handleRedisException(WebRequest request, RedisException e) {
+        log.error("[RedisException] ", e);
+        var response = ApiResponse.failure(ResultCode.REDIS_COMMON_EXP, e.getMessage());
+        return new ResponseEntity<>(response, ResultCode.REDIS_COMMON_EXP.getStatus());
+    }
+
     @ExceptionHandler(value = AccessDeniedException.class)
     public ResponseEntity<ApiResponse<Object>> handleAccessDeniedException(WebRequest request, AccessDeniedException e) {
         log.error("[AccessDeniedException] ", e);
@@ -101,7 +122,6 @@ public class GlobalExceptionHandler {
         var response = ApiResponse.failure(ResultCode.BAD_REQUEST, e.getMessage());
         return new ResponseEntity<>(response, ResultCode.BAD_REQUEST.getStatus());
     }
-
 
     @ExceptionHandler(value = DateTimeParseException.class)
     public ResponseEntity<ApiResponse<Object>> handleConstraintDateTimeParseException(WebRequest request, DateTimeParseException e) {
