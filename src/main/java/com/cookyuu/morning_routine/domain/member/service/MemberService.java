@@ -1,12 +1,17 @@
 package com.cookyuu.morning_routine.domain.member.service;
 
+import com.cookyuu.morning_routine.domain.auth.dto.JWTUserInfo;
 import com.cookyuu.morning_routine.domain.auth.dto.SignupDto;
 import com.cookyuu.morning_routine.domain.member.entity.Member;
 import com.cookyuu.morning_routine.domain.member.repository.MemberRepository;
 import com.cookyuu.morning_routine.global.code.ResultCode;
 import com.cookyuu.morning_routine.global.exception.domain.MRAuthException;
+import com.cookyuu.morning_routine.global.exception.domain.MRMemberException;
+import com.cookyuu.morning_routine.global.utils.AuthUtils;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,6 +19,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final AuthUtils authUtils;
 
     public void saveMember(Member member) {
         memberRepository.save(member);
@@ -31,5 +37,23 @@ public class MemberService {
             throw new MRAuthException(ResultCode.VALID_PHONENUMBER_DUPLICATE);
         }
         log.debug("[Signup] Login Info Duplication Check, OK");
+    }
+
+    public Member getByLoginId(String loginId) {
+        return memberRepository.findByLoginId(loginId).orElseThrow(() -> new EntityNotFoundException("없는 유저입니다."));
+    }
+
+    public JWTUserInfo checkLoginCredentials(String loginId, String password) {
+        Member member = findByLoginId(loginId);
+        log.info("[Login] Check LoginCredential, loginId : {}", member.getLoginId());
+        authUtils.checkPassword(member.getPassword(), password);
+        JWTUserInfo userInfo = new JWTUserInfo();
+        userInfo.of(member);
+        return userInfo;
+    }
+
+    private Member findByLoginId(String loginId) {
+        return memberRepository.findByLoginId(loginId).orElseThrow(()->
+                new MRMemberException(ResultCode.MEMBER_NOT_FOUND));
     }
 }

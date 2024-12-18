@@ -9,6 +9,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConversionException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -37,6 +38,13 @@ public class GlobalExceptionHandler {
         log.error("[MRException] {}", errMsg);
         var response = ApiResponse.failure(e.getResultCode(), errMsg);
         return new ResponseEntity<>(response, e.getResultCode().getStatus());
+    }
+
+    @ExceptionHandler(value = BadCredentialsException.class)
+    public ResponseEntity<ApiResponse<Object>> handleBadCredentialsExceptionException(WebRequest request, BadCredentialsException e) {
+        log.error("[BadCredentialsException] ", e);
+        var response = ApiResponse.failure(ResultCode.AUTH_PASSWORD_UNMATCHED, e.getMessage());
+        return new ResponseEntity<>(response, ResultCode.AUTH_PASSWORD_UNMATCHED.getStatus());
     }
 
     @ExceptionHandler(value = RedisException.class)

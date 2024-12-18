@@ -30,6 +30,9 @@ public enum ResultCode {
     JWT_EMPTY_TOKEN(HttpStatus.BAD_REQUEST, "J-005", "토큰 데이터가 비어있습니다."),
     JWT_ALREADY_LOGOUT(HttpStatus.UNAUTHORIZED, "J-006", "이미 로그아웃된 사용자입니다."),
 
+    // Auth
+    AUTH_PASSWORD_UNMATCHED(HttpStatus.BAD_REQUEST, "A-001", "로그인 실패, 패스워드가 일치하지 않습니다."),
+
     // Member
     VALID_EMAIL_DUPLICATE(HttpStatus.BAD_REQUEST, "M-001", "이메일 유효성 검증 실패. 이미 등록된 이메일입니다."),
     VALID_EMAIL_FORMAT(HttpStatus.BAD_REQUEST, "M-002", "이메일 유효성 검증 실패. 잘못된 이메일 형식입니다."),
@@ -39,6 +42,7 @@ public enum ResultCode {
     VALID_LOGINID_FORMAT(HttpStatus.BAD_REQUEST, "M-006", "로그인 아이디 유효성 검증 실패. 잘못된 아이디 형식입니다."),
     VALID_PASSWORD_FORMAT(HttpStatus.BAD_REQUEST, "M-007", "패스워드 유효성 검증 실패. 잘못된 패스워드 형식입니다."),
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "M-008", "해당 유저를 찾을 수 없습니다.");
+
 
     private final HttpStatus status;
     private final String code;
