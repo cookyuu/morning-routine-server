@@ -24,37 +24,42 @@ public class RedisUtils {
             ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
             return valueOperations.get(key);
         } catch (RedisException e) {
-            log.error("[GetRedisData] ", e);
+            log.error("[Redis::Error] Get data process, Exception : ", e);
             throw e;
         }
     }
 
     // 유효시간 동안 key,value 저장
-    public void setDataExpire(String key, String value, long durationSec) {
+    public void setDataExpire(String key, Object value, long durationSec) {
         try {
             ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
-            Duration expiredDuration = Duration.ofSeconds(durationSec);
-            valueOperations.set(key, value, expiredDuration);
+            Duration expiredDuration = Duration.ofMinutes(durationSec);
+            valueOperations.set(key, String.valueOf(value), expiredDuration);
         } catch (RedisException e) {
-            log.error("[SaveRedisData] ", e);
+            log.error("[Redis::Error] Save data process, Exception : ", e);
             throw e;
         }
     }
 
-    public void setData(String key, String value) {
+    public void setData(String key, Object value) {
         try {
             ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
-            valueOperations.set(key, value);
+            valueOperations.set(key, String.valueOf(value));
         } catch (RedisException e) {
-            log.error("[SaveRedisData] ", e);
+            log.error("[Redis::Error] Save data process, Exception : ", e);
             throw e;
         }
     }
 
     public void setHashCountData(String key) {
-        HashOperations<String, String, String> hashOperations = redisTemplate.opsForHash();
-        String hashKey = "count";
-        hashOperations.put(key, hashKey, "1");
+        try {
+            HashOperations<String, String, String> hashOperations = redisTemplate.opsForHash();
+            String hashKey = "count";
+            hashOperations.put(key, hashKey, "1");
+        } catch (RedisException e) {
+            log.error("[Redis::Error] Save hash count data process, Exception : ", e);
+            throw e;
+        }
     }
 
     // 삭제
@@ -62,7 +67,7 @@ public class RedisUtils {
         try {
             redisTemplate.delete(key);
         } catch (RedisException e) {
-            log.error("[DeleteRedisData] ", e);
+            log.error("[Redis::Error] Delete data process , Exception : ", e);
             throw e;
         }
     }
@@ -71,33 +76,44 @@ public class RedisUtils {
         try {
             return redisTemplate.hasKey(key);
         } catch (RedisException e) {
-            log.error("[RedisKeyIsExist] ", e);
+            log.error("[Redis::Error] Check exists of key process, Exception :  ", e);
             throw e;
         }
     }
 
 
     public void increaseCount(String key) {
-        HashOperations<String, String, String> hashOperations = redisTemplate.opsForHash();
-        String hashKey = "count";
-        hashOperations.increment(key, hashKey, 1);
+        try {
+            HashOperations<String, String, String> hashOperations = redisTemplate.opsForHash();
+            String hashKey = "count";
+            hashOperations.increment(key, hashKey, 1);
+        } catch (RedisException e) {
+            log.error("[Redis::Error] Increase count of Key, Exception : ", e);
+            throw e;
+        }
     }
 
     public Map<String, Integer> getHashCountDataAndDelete(String keyPattern) {
-        HashOperations<String, String, String> hashOperations = redisTemplate.opsForHash();
-        Cursor<byte[]> cursor = redisTemplate.getConnectionFactory().getConnection().scan(
-                ScanOptions.scanOptions().match("*" + keyPattern + "*").build()
-        );
+        try {
+            HashOperations<String, String, String> hashOperations = redisTemplate.opsForHash();
+            Cursor<byte[]> cursor = redisTemplate.getConnectionFactory().getConnection().scan(
+                    ScanOptions.scanOptions().match("*" + keyPattern + "*").build()
+            );
 
-        Map<String, Integer> countDataMap = new HashMap<>();
+            Map<String, Integer> countDataMap = new HashMap<>();
 
-        while (cursor.hasNext()) {
-            String key = new String(cursor.next(), StandardCharsets.UTF_8);
-            Map<String, String> entries = hashOperations.entries(key);
-            countDataMap.put(key, Integer.valueOf(entries.get("count")));
-            hashOperations.delete(key,"count");
+            while (cursor.hasNext()) {
+                String key = new String(cursor.next(), StandardCharsets.UTF_8);
+                Map<String, String> entries = hashOperations.entries(key);
+                countDataMap.put(key, Integer.valueOf(entries.get("count")));
+                hashOperations.delete(key, "count");
+            }
+            return countDataMap;
+        } catch (RedisException e) {
+            log.error("[Redis::Error] Count Data and Delete Process, Exception : ", e);
+            throw e;
         }
-        return countDataMap;
+
     }
 
 }

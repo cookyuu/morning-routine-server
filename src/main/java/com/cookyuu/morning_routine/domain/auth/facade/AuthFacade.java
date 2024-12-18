@@ -32,7 +32,7 @@ public class AuthFacade {
     private final RedisUtils redisUtils;
     private final MemberService memberService;
 
-    @Transactional(readOnly = true)
+    @Transactional
     public LoginDto.Response login(Object loginInfo, HttpServletResponse response) {
         if (!(loginInfo instanceof LoginDto.Request req)) {
             log.error("[Login::Error] Fail Down casting Object to LoginDto.Request");
@@ -45,6 +45,9 @@ public class AuthFacade {
         response.addCookie(cookie);
 
         redisUtils.setDataExpire(RedisKeyCode.REFRESH_TOKEN.getSeparator()+req.getLoginId(), refreshToken, Integer.parseInt(refreshTokenExp));
+        if (redisUtils.hasKey(RedisKeyCode.LOGOUT_TOKEN.getSeparator()+req.getLoginId())) {
+            redisUtils.deleteData(RedisKeyCode.LOGOUT_TOKEN.getSeparator()+req.getLoginId());
+        }
         return LoginDto.Response.builder()
                 .accessToken(accessToken)
                 .build();
@@ -65,6 +68,14 @@ public class AuthFacade {
         req.setEncPassword(authUtils.encryptPassword(password));
         memberService.isDuplicateLoginInfo(email, loginId, phoneNumber);
         memberService.saveMember(req.of());
+    }
+
+    @Transactional
+    public void logout(String loginId, HttpServletResponse response) {
+        redisUtils.setDataExpire(RedisKeyCode.LOGOUT_TOKEN.getSeparator()+loginId, true , Integer.parseInt(accessTokenExp));
+        redisUtils.deleteData(RedisKeyCode.REFRESH_TOKEN.getSeparator()+loginId);
+        Cookie cookie = new Cookie(CookieCode.REFRESH_TOKEN.getKey(), null);
+        response.addCookie(cookie);
     }
 
     private void validateSignupInfo(String email, String loginId, String phoneNumber, String password) {
