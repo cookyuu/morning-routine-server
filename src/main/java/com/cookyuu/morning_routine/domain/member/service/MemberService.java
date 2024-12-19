@@ -2,6 +2,7 @@ package com.cookyuu.morning_routine.domain.member.service;
 
 import com.cookyuu.morning_routine.domain.auth.dto.JWTUserInfo;
 import com.cookyuu.morning_routine.domain.auth.dto.SignupDto;
+import com.cookyuu.morning_routine.domain.member.dto.UserDetailDto;
 import com.cookyuu.morning_routine.domain.member.entity.Member;
 import com.cookyuu.morning_routine.domain.member.repository.MemberRepository;
 import com.cookyuu.morning_routine.global.code.ResultCode;
@@ -44,12 +45,18 @@ public class MemberService {
         saveMember(req.of());
     }
 
+    public UserDetailDto.Response getMemberDetail(String loginId) {
+        Member member = findByLoginId(loginId);
+        return UserDetailDto.Response.from(member);
+    }
+
     private void validateSignupInfo(String email, String loginId, String phoneNumber, String password) {
         validateUtils.isAvailableEmailFormat(email);
         validateUtils.isAvailableLoginIdFormat(loginId);
         validateUtils.isAvailablePhoneNumberFormat(phoneNumber);
         validateUtils.isAvailablePasswordFormat(password);
     }
+
     private void isDuplicateLoginInfo(String email, String loginId, String phoneNumber) {
         if (memberRepository.existsByEmail(email)) {
             throw new MRAuthException(ResultCode.VALID_EMAIL_DUPLICATE);
@@ -68,9 +75,9 @@ public class MemberService {
         log.debug("[Signup] Member register, OK");
     }
 
-
     private Member findByLoginId(String loginId) {
         return memberRepository.findByLoginId(loginId).orElseThrow(()->
                 new MRMemberException(ResultCode.MEMBER_NOT_FOUND));
     }
+
 }
