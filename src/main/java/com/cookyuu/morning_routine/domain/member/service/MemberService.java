@@ -8,6 +8,7 @@ import com.cookyuu.morning_routine.global.code.ResultCode;
 import com.cookyuu.morning_routine.global.exception.domain.MRAuthException;
 import com.cookyuu.morning_routine.global.exception.domain.MRMemberException;
 import com.cookyuu.morning_routine.global.utils.AuthUtils;
+import com.cookyuu.morning_routine.global.utils.ValidateUtils;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,13 +21,36 @@ import org.springframework.stereotype.Service;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final AuthUtils authUtils;
+    private final ValidateUtils validateUtils;
 
-    public void saveMember(Member member) {
-        memberRepository.save(member);
-        log.debug("[Signup] Member register, OK");
+    public JWTUserInfo checkLoginCredentials(String loginId, String password) {
+        Member member = findByLoginId(loginId);
+        log.info("[Login] Check LoginCredential, loginId : {}", member.getLoginId());
+        authUtils.checkPassword(member.getPassword(), password);
+        JWTUserInfo userInfo = new JWTUserInfo();
+        userInfo.of(member);
+        return userInfo;
     }
 
-    public void isDuplicateLoginInfo(String email, String loginId, String phoneNumber) {
+    public void signup(SignupDto.Request req) {
+        String email = req.getEmail();
+        String loginId = req.getLoginId();
+        String phoneNumber = req.getPhoneNumber();
+        String password = req.getPassword();
+
+        validateSignupInfo(email, loginId, phoneNumber, password);
+        req.setEncPassword(authUtils.encryptPassword(password));
+        isDuplicateLoginInfo(email, loginId, phoneNumber);
+        saveMember(req.of());
+    }
+
+    private void validateSignupInfo(String email, String loginId, String phoneNumber, String password) {
+        validateUtils.isAvailableEmailFormat(email);
+        validateUtils.isAvailableLoginIdFormat(loginId);
+        validateUtils.isAvailablePhoneNumberFormat(phoneNumber);
+        validateUtils.isAvailablePasswordFormat(password);
+    }
+    private void isDuplicateLoginInfo(String email, String loginId, String phoneNumber) {
         if (memberRepository.existsByEmail(email)) {
             throw new MRAuthException(ResultCode.VALID_EMAIL_DUPLICATE);
         }
@@ -39,18 +63,11 @@ public class MemberService {
         log.debug("[Signup] Login Info Duplication Check, OK");
     }
 
-    public Member getByLoginId(String loginId) {
-        return memberRepository.findByLoginId(loginId).orElseThrow(() -> new EntityNotFoundException("없는 유저입니다."));
+    private void saveMember(Member member) {
+        memberRepository.save(member);
+        log.debug("[Signup] Member register, OK");
     }
 
-    public JWTUserInfo checkLoginCredentials(String loginId, String password) {
-        Member member = findByLoginId(loginId);
-        log.info("[Login] Check LoginCredential, loginId : {}", member.getLoginId());
-        authUtils.checkPassword(member.getPassword(), password);
-        JWTUserInfo userInfo = new JWTUserInfo();
-        userInfo.of(member);
-        return userInfo;
-    }
 
     private Member findByLoginId(String loginId) {
         return memberRepository.findByLoginId(loginId).orElseThrow(()->

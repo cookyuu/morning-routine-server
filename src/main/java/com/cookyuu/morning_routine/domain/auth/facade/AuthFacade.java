@@ -59,15 +59,8 @@ public class AuthFacade {
             log.error("[Signup::Error] Fail Down casting Object to SignupDto.Request");
             throw new IllegalArgumentException("회원가입 실패");
         }
-        String email = req.getEmail();
-        String loginId = req.getLoginId();
-        String phoneNumber = req.getPhoneNumber();
-        String password = req.getPassword();
+        memberService.signup(req);
 
-        validateSignupInfo(email, loginId, phoneNumber, password);
-        req.setEncPassword(authUtils.encryptPassword(password));
-        memberService.isDuplicateLoginInfo(email, loginId, phoneNumber);
-        memberService.saveMember(req.of());
     }
 
     @Transactional
@@ -78,10 +71,5 @@ public class AuthFacade {
         response.addCookie(cookie);
     }
 
-    private void validateSignupInfo(String email, String loginId, String phoneNumber, String password) {
-        validateUtils.isAvailableEmailFormat(email);
-        validateUtils.isAvailableLoginIdFormat(loginId);
-        validateUtils.isAvailablePhoneNumberFormat(phoneNumber);
-        validateUtils.isAvailablePasswordFormat(password);
-    }
+
 }
