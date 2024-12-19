@@ -5,6 +5,7 @@ import com.cookyuu.morning_routine.domain.stock.entity.StockInterest;
 import com.cookyuu.morning_routine.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -49,12 +50,20 @@ public class Member extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "member_role", nullable = false)
-    @ColumnDefault("'USER'")
-    private RoleType role;
+    private RoleType role = RoleType.USER;
 
     @OneToMany(mappedBy = "member")
     private List<RegionInterest> regionInterests = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
     private List<StockInterest> stockInterests = new ArrayList<>();
+
+    @Builder
+    Member(String name, String loginId, String password, String email, String phoneNumber) {
+        this.name = name;
+        this.loginId = loginId;
+        this.password = password;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+    }
 }
