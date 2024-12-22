@@ -45,7 +45,7 @@ public class AuthFacade {
         response.addCookie(cookie);
 
         redisUtils.setDataExpire(RedisKeyCode.REFRESH_TOKEN.getSeparator()+req.getLoginId(), refreshToken, Integer.parseInt(refreshTokenExp));
-        if (redisUtils.hasKey(RedisKeyCode.LOGOUT_TOKEN.getSeparator()+req.getLoginId())) {
+        if (Boolean.TRUE.equals(redisUtils.hasKey(RedisKeyCode.LOGOUT_TOKEN.getSeparator()+req.getLoginId()))) {
             redisUtils.deleteData(RedisKeyCode.LOGOUT_TOKEN.getSeparator()+req.getLoginId());
         }
         return LoginDto.Response.builder()

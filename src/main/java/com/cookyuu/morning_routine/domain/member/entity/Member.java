@@ -41,8 +41,8 @@ public class Member extends BaseTimeEntity {
     @Column(name = "phoneNumber", nullable = false)
     private String phoneNumber;
 
-    @Column(name = "is_connect_oauth", nullable = false)
-    private boolean isConnectOauth;
+    @Column(name = "connected_oauth", nullable = false)
+    private boolean connectedOauth;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "oauth_type", nullable = true)
@@ -66,4 +66,18 @@ public class Member extends BaseTimeEntity {
         this.email = email;
         this.phoneNumber = phoneNumber;
     }
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setOauth(String email, OauthType oauthType) {
+        this.email = email;
+        this.oauthType = oauthType;
+        this.connectedOauth = true;
+    }
+
+
 }

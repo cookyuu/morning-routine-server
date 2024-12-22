@@ -41,7 +41,8 @@ public enum ResultCode {
     VALID_LOGINID_DUPLICATE(HttpStatus.BAD_REQUEST,"M-005", "로그인 아이디 유효성 검증 실패. 이미 등록된 아이디입니다."),
     VALID_LOGINID_FORMAT(HttpStatus.BAD_REQUEST, "M-006", "로그인 아이디 유효성 검증 실패. 잘못된 아이디 형식입니다."),
     VALID_PASSWORD_FORMAT(HttpStatus.BAD_REQUEST, "M-007", "패스워드 유효성 검증 실패. 잘못된 패스워드 형식입니다."),
-    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "M-008", "해당 유저를 찾을 수 없습니다.");
+    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "M-008", "해당 유저를 찾을 수 없습니다."),
+    MEMBER_DETAIL_UPDATE_FAIL(HttpStatus.BAD_REQUEST, "M-009", "회원 정보 수정 실패.");
 
 
     private final HttpStatus status;

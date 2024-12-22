@@ -7,6 +7,7 @@ import lombok.Getter;
 public class MRException extends RuntimeException {
     private final ResultCode resultCode;
     private String message;
+
     private String[] args;
     private Object data;
 
