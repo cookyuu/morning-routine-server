@@ -81,16 +81,13 @@ public class RedisUtils {
         }
     }
 
-
-    public void increaseCount(String key) {
+    public Long increaseCount(String key) {
         try {
-            HashOperations<String, String, String> hashOperations = redisTemplate.opsForHash();
-            String hashKey = "count";
-            hashOperations.increment(key, hashKey, 1);
+            return redisTemplate.opsForValue().increment(key);
         } catch (RedisException e) {
             log.error("[Redis::Error] Increase count of Key, Exception : ", e);
-            throw e;
         }
+        return null;
     }
 
     public Map<String, Integer> getHashCountDataAndDelete(String keyPattern) {
@@ -116,4 +113,11 @@ public class RedisUtils {
 
     }
 
+    public void setExpire(String key, long expireTime) {
+        redisTemplate.expire(key, Duration.ofSeconds(expireTime));
+    }
+
+    public Long decrement(String key) {
+        return redisTemplate.opsForValue().getOperations().opsForValue().decrement(key);
+    }
 }

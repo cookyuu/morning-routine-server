@@ -1,7 +1,9 @@
 package com.cookyuu.morning_routine.domain.auth.controller;
 
+import com.cookyuu.morning_routine.domain.auth.dto.IssueOtpCodeDto;
 import com.cookyuu.morning_routine.domain.auth.dto.LoginDto;
 import com.cookyuu.morning_routine.domain.auth.dto.SignupDto;
+import com.cookyuu.morning_routine.domain.auth.dto.VerifyOtpCodeDto;
 import com.cookyuu.morning_routine.domain.auth.facade.AuthFacade;
 import com.cookyuu.morning_routine.global.dto.ApiResponse;
 import com.cookyuu.morning_routine.global.security.jwt.CustomUserDetails;
@@ -36,5 +38,16 @@ public class AuthController {
     public ApiResponse<String> logout(@AuthenticationPrincipal CustomUserDetails userDetails, HttpServletResponse response) {
         authFacade.logout(userDetails.getLoginId(), response);
         return ApiResponse.success("로그아웃 성공");
+    }
+
+    @PostMapping("/otp/issue")
+    public ApiResponse<String> issueAuthNumber(@RequestBody IssueOtpCodeDto.Request issueAuthInfo) {
+        authFacade.issueAuthNumber(issueAuthInfo);
+        return ApiResponse.success("인증번호 발송 완료.");
+    }
+
+    @PostMapping("/otp/verify")
+    public ApiResponse<VerifyOtpCodeDto.Response> verifyAuthenticationNumber(@RequestBody VerifyOtpCodeDto.Request verifyInfo) {
+        return ApiResponse.success(authFacade.verifyAuthNumber(verifyInfo));
     }
 }

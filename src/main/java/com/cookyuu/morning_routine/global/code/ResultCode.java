@@ -32,6 +32,8 @@ public enum ResultCode {
 
     // Auth
     AUTH_PASSWORD_UNMATCHED(HttpStatus.BAD_REQUEST, "A-001", "로그인 실패, 패스워드가 일치하지 않습니다."),
+    AUTH_OTP_DAILY_LIMIT(HttpStatus.FORBIDDEN, "A-002", "일일 OTP 이용한도를 초과했습니다. "),
+    SMS_SEND_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "A-003" , "SMS 전송 실패. "),
 
     // Member
     VALID_EMAIL_DUPLICATE(HttpStatus.BAD_REQUEST, "M-001", "이메일 유효성 검증 실패. 이미 등록된 이메일입니다."),
