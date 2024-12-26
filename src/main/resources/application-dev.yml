@@ -40,6 +40,8 @@ auth:
       exp: ${JWT_ACCESS_EXP}
     refresh:
       exp: ${JWT_REFRESH_EXP}
+  otp:
+    exp: ${AUTH_OTP_EXP}
 
 logging:
   level:

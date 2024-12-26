@@ -32,6 +32,10 @@ public enum ResultCode {
 
     // Auth
     AUTH_PASSWORD_UNMATCHED(HttpStatus.BAD_REQUEST, "A-001", "로그인 실패, 패스워드가 일치하지 않습니다."),
+    AUTH_OTP_DAILY_LIMIT(HttpStatus.BAD_REQUEST, "A-002", "일일 OTP 이용한도를 초과했습니다. "),
+    SMS_SEND_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "A-003" , "SMS 전송 실패. "),
+    AUTH_OTP_EXPIRED(HttpStatus.UNAUTHORIZED, "A-004", "OTP CODE가 만료됐습니다. 다시 발급해주세요. " ),
+    AUTH_OTP_UNMATCHED(HttpStatus.UNAUTHORIZED, "A-005", "인증번호가 일치하지 않습니다."),
 
     // Member
     VALID_EMAIL_DUPLICATE(HttpStatus.BAD_REQUEST, "M-001", "이메일 유효성 검증 실패. 이미 등록된 이메일입니다."),
@@ -41,7 +45,8 @@ public enum ResultCode {
     VALID_LOGINID_DUPLICATE(HttpStatus.BAD_REQUEST,"M-005", "로그인 아이디 유효성 검증 실패. 이미 등록된 아이디입니다."),
     VALID_LOGINID_FORMAT(HttpStatus.BAD_REQUEST, "M-006", "로그인 아이디 유효성 검증 실패. 잘못된 아이디 형식입니다."),
     VALID_PASSWORD_FORMAT(HttpStatus.BAD_REQUEST, "M-007", "패스워드 유효성 검증 실패. 잘못된 패스워드 형식입니다."),
-    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "M-008", "해당 유저를 찾을 수 없습니다.");
+    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "M-008", "해당 유저를 찾을 수 없습니다."),
+    MEMBER_DETAIL_UPDATE_FAIL(HttpStatus.BAD_REQUEST, "M-009", "회원 정보 수정 실패.");
 
 
     private final HttpStatus status;

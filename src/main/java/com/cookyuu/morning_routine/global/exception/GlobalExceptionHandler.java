@@ -36,7 +36,13 @@ public class GlobalExceptionHandler {
             errMsg = e.getMessage();
         }
         log.error("[MRException] {}", errMsg);
-        var response = ApiResponse.failure(e.getResultCode(), errMsg);
+        ApiResponse response;
+        if (e.getData() == null) {
+            response = ApiResponse.failure(e.getResultCode(), errMsg);
+        } else {
+            response = ApiResponse.failure(e.getResultCode(), errMsg, e.getData());
+        }
+
         return new ResponseEntity<>(response, e.getResultCode().getStatus());
     }
 

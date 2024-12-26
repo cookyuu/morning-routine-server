@@ -8,7 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-public class UserDetailDto {
+public class MemberDetailDto {
     @AllArgsConstructor
     @NoArgsConstructor
     @Getter
@@ -18,7 +18,7 @@ public class UserDetailDto {
         private String loginId;
         private String email;
         private String phoneNumber;
-        private boolean isConnectOauth;
+        private boolean connectedOauth;
         private OauthType oauthType;
         private RoleType roleType;
 
@@ -28,7 +28,7 @@ public class UserDetailDto {
                     .loginId(member.getLoginId())
                     .email(member.getEmail())
                     .phoneNumber(member.getPhoneNumber())
-                    .isConnectOauth(member.isConnectOauth())
+                    .connectedOauth(member.isConnectedOauth())
                     .oauthType(member.getOauthType())
                     .roleType(member.getRole())
                     .build();

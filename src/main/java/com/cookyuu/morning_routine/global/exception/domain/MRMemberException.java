@@ -12,8 +12,11 @@ public class MRMemberException extends MRException {
         super(resultCode);
     }
 
+    public MRMemberException(ResultCode resultCode, String customMsg) {
+        super(resultCode, customMsg);
+    }
+
     public MRMemberException(ResultCode resultCode, Throwable t) {
         super(resultCode, t);
     }
-
 }

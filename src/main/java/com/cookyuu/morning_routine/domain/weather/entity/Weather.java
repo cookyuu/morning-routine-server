@@ -25,16 +25,16 @@ public class Weather extends BaseTimeEntity {
     private String microDustStatus;
 
     @Column(name = "today_min_temperature")
-    private Long todatyMinTeperature;
+    private Long todayMinTemperature;
 
     @Column(name = "today_max_temperature")
-    private Long todatyMaxTeperature;
+    private Long todayMaxTemperature;
 
-    @Column(name = "is_today_rain")
-    private boolean isTodayRain;
+    @Column(name = "today_rain")
+    private boolean todayRain;
 
-    @Column(name = "is_today_snow")
-    private boolean isTodaySnow;
+    @Column(name = "today_snow")
+    private boolean todaySnow;
 
     @ManyToOne
     @JoinColumn(name = "region_code")

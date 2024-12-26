@@ -7,6 +7,7 @@ import lombok.Getter;
 public class MRException extends RuntimeException {
     private final ResultCode resultCode;
     private String message;
+
     private String[] args;
     private Object data;
 
@@ -37,6 +38,12 @@ public class MRException extends RuntimeException {
         super(t);
         this.resultCode = resultCode;
         this.message = customMsg;
+    }
+
+    protected MRException(ResultCode resultCode, Object data) {
+        super(resultCode.getMessage());
+        this.resultCode = resultCode;
+        this.data = data;
     }
 
 }

@@ -124,6 +124,15 @@ public class ApiResponse<T> {
         );
     }
 
+    public static <T> ApiResponse<T> failure(ResultCode resultCode, String message, T data) {
+        return new ApiResponse<>(
+                resultCode,
+                message,
+                data,
+                null
+        );
+    }
+
     @Getter
     @AllArgsConstructor
     public static class PageResponse {

@@ -1,8 +1,8 @@
 package com.cookyuu.morning_routine.domain.auth.facade;
 
-import com.cookyuu.morning_routine.domain.auth.dto.JWTUserInfo;
-import com.cookyuu.morning_routine.domain.auth.dto.LoginDto;
-import com.cookyuu.morning_routine.domain.auth.dto.SignupDto;
+import com.cookyuu.morning_routine.domain.auth.dto.*;
+import com.cookyuu.morning_routine.domain.auth.service.AuthService;
+import com.cookyuu.morning_routine.domain.auth.service.SmsService;
 import com.cookyuu.morning_routine.domain.member.service.MemberService;
 import com.cookyuu.morning_routine.global.code.CookieCode;
 import com.cookyuu.morning_routine.global.code.RedisKeyCode;
@@ -25,12 +25,12 @@ public class AuthFacade {
     @Value("${auth.jwt.access.exp}")
     private String accessTokenExp;
 
-    private final ValidateUtils validateUtils;
-    private final AuthUtils authUtils;
     private final JwtUtils jwtUtils;
     private final CookieUtils cookieUtils;
     private final RedisUtils redisUtils;
     private final MemberService memberService;
+    private final AuthService authService;
+    private final SmsService smsService;
 
     @Transactional
     public LoginDto.Response login(Object loginInfo, HttpServletResponse response) {
@@ -45,7 +45,7 @@ public class AuthFacade {
         response.addCookie(cookie);
 
         redisUtils.setDataExpire(RedisKeyCode.REFRESH_TOKEN.getSeparator()+req.getLoginId(), refreshToken, Integer.parseInt(refreshTokenExp));
-        if (redisUtils.hasKey(RedisKeyCode.LOGOUT_TOKEN.getSeparator()+req.getLoginId())) {
+        if (Boolean.TRUE.equals(redisUtils.hasKey(RedisKeyCode.LOGOUT_TOKEN.getSeparator()+req.getLoginId()))) {
             redisUtils.deleteData(RedisKeyCode.LOGOUT_TOKEN.getSeparator()+req.getLoginId());
         }
         return LoginDto.Response.builder()
@@ -53,7 +53,6 @@ public class AuthFacade {
                 .build();
     }
 
-    @Transactional
     public void signup(Object signupInfo) {
         if (!(signupInfo instanceof SignupDto.Request req)) {
             log.error("[Signup::Error] Fail Down casting Object to SignupDto.Request");
@@ -72,4 +71,22 @@ public class AuthFacade {
     }
 
 
+    @Transactional
+    public void issueOtpCode(IssueOtpCodeDto.Request issueAuthInfo) {
+        log.debug("[Auth] Issue otp code process, Start.  phoneNumber : {}", issueAuthInfo.getPhoneNumber());
+        String otpCode = authService.issueOtpCode(issueAuthInfo);
+        log.debug("[Auth] Issue otp code, OK.  otpCode : {}", otpCode);
+        try {
+            smsService.sendSms(issueAuthInfo.getPhoneNumber(), otpCode);
+        } catch (Exception e) {
+            authService.rollbackIssueOtpCode(issueAuthInfo);
+            log.info("[Auth::Error] Issue auth process, Auth code send fail (SMS)");
+            log.error("[Auth::Error] ", e);
+            throw e;
+        }
+    }
+
+    public VerifyOtpCodeDto.Response verifyOtpCode(VerifyOtpCodeDto.Request verifyInfo) {
+        return authService.verifyOtpCode(verifyInfo);
+    }
 }
