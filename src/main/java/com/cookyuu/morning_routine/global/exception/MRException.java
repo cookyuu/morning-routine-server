@@ -40,4 +40,10 @@ public class MRException extends RuntimeException {
         this.message = customMsg;
     }
 
+    protected MRException(ResultCode resultCode, Object data) {
+        super(resultCode.getMessage());
+        this.resultCode = resultCode;
+        this.data = data;
+    }
+
 }

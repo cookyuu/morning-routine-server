@@ -33,7 +33,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             String authorizationHeader = request.getHeader("Authorization");
-            log.info("[ValidateJwtToken] Authorization Code : {}", authorizationHeader);
+//            log.debug("[ValidateJwtToken] Authorization Code : {}", authorizationHeader);
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
                 String accessToken = jwtUtils.getAccessToken(authorizationHeader);
                 RoleType role = RoleType.valueOf(jwtUtils.getRole(accessToken));

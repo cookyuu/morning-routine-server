@@ -41,13 +41,13 @@ public class AuthController {
     }
 
     @PostMapping("/otp/issue")
-    public ApiResponse<String> issueAuthNumber(@RequestBody IssueOtpCodeDto.Request issueAuthInfo) {
-        authFacade.issueAuthNumber(issueAuthInfo);
+    public ApiResponse<String> issueOtpCode(@RequestBody IssueOtpCodeDto.Request issueOtpInfo) {
+        authFacade.issueOtpCode(issueOtpInfo);
         return ApiResponse.success("인증번호 발송 완료.");
     }
 
     @PostMapping("/otp/verify")
-    public ApiResponse<VerifyOtpCodeDto.Response> verifyAuthenticationNumber(@RequestBody VerifyOtpCodeDto.Request verifyInfo) {
-        return ApiResponse.success(authFacade.verifyAuthNumber(verifyInfo));
+    public ApiResponse<VerifyOtpCodeDto.Response> verifyAuthenticationOtpCode(@RequestBody VerifyOtpCodeDto.Request otpInfo) {
+        return ApiResponse.success(authFacade.verifyOtpCode(otpInfo));
     }
 }

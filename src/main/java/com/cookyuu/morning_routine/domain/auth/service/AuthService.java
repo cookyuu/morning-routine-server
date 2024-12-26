@@ -45,10 +45,22 @@ public class AuthService {
         log.info("[Auth] Rollback Issue Otp Code. ");
     }
 
-    public VerifyOtpCodeDto.Response verifyOtpCode(VerifyOtpCodeDto.Request verifyInfo) {
-        String phoneNumber = verifyInfo.getPhoneNumber();
-        String otpCode = verifyInfo.getOtpCode();
-        return null;
+    public VerifyOtpCodeDto.Response verifyOtpCode(VerifyOtpCodeDto.Request otpInfo) {
+        String phoneNumber = otpInfo.getPhoneNumber();
+        validateUtils.isAvailablePhoneNumberFormat(phoneNumber);
+
+        String otpCode = otpInfo.getOtpCode();
+        String key = RedisKeyCode.OTP_CODE.getSeparator()+phoneNumber;
+        String cacheOtpCode = redisUtils.getData(key);
+        if (cacheOtpCode == null) {
+            throw new MRAuthException(ResultCode.AUTH_OTP_EXPIRED);
+        }
+        if (otpCode.equals(cacheOtpCode)) {
+            return VerifyOtpCodeDto.Response.builder().validatedPhoneNumber(true).build();
+        } else {
+            throw new MRAuthException(ResultCode.AUTH_OTP_UNMATCHED, VerifyOtpCodeDto.Response.builder().validatedPhoneNumber(false).build());
+        }
+
     }
 
     private void countSendOtp(String key) {

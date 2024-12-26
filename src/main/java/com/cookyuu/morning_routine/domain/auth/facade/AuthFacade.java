@@ -72,7 +72,7 @@ public class AuthFacade {
 
 
     @Transactional
-    public void issueAuthNumber(IssueOtpCodeDto.Request issueAuthInfo) {
+    public void issueOtpCode(IssueOtpCodeDto.Request issueAuthInfo) {
         log.debug("[Auth] Issue otp code process, Start.  phoneNumber : {}", issueAuthInfo.getPhoneNumber());
         String otpCode = authService.issueOtpCode(issueAuthInfo);
         log.debug("[Auth] Issue otp code, OK.  otpCode : {}", otpCode);
@@ -86,8 +86,7 @@ public class AuthFacade {
         }
     }
 
-    public VerifyOtpCodeDto.Response verifyAuthNumber(VerifyOtpCodeDto.Request verifyInfo) {
-        authService.verifyOtpCode(verifyInfo);
-        return null;
+    public VerifyOtpCodeDto.Response verifyOtpCode(VerifyOtpCodeDto.Request verifyInfo) {
+        return authService.verifyOtpCode(verifyInfo);
     }
 }
