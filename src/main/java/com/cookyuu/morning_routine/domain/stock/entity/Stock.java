@@ -23,9 +23,6 @@ public class Stock extends BaseTimeEntity {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "sector")
-    private String sector;
-
     @Column(name = "country")
     private String country;
 

@@ -16,23 +16,35 @@ import java.time.LocalDate;
 public class StockIndex extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "stock_id")
+    @Column(name = "stock_index_id")
     private Long id;
-
-    @Column(name = "last_sale")
-    private Long lastSale;
 
     @Column(name = "market_cap")
     private Long marketCap;
 
-    @Column(name = "net_change")
-    private Long netChange;
+    @Column(name = "ori_closing_price")
+    private Long oriClosingPrice;
 
-    @Column(name = "percent_change")
-    private Long percentChange;
+    @Column(name = "ori_change_price")
+    private Long oriPriceChange;
 
-    @Column(name = "as_of_date")
-    private LocalDate asOfDate;
+    @Column(name = "ori_change_percent")
+    private Long oriPercentChange;
+
+    @Column(name = "after_load_completed")
+    private boolean afterLoadCompleted;
+
+    @Column(name = "after_closing_price")
+    private Long afterClosingPrice;
+
+    @Column(name = "after_change_percent")
+    private Long afterChangePercent;
+
+    @Column(name = "after_change_price")
+    private Long afterChangePrice;
+
+    @Column(name = "price_base_date")
+    private LocalDate priceBaseDate;
 
     @ManyToOne
     @JoinColumn(name = "stock_symbol")
