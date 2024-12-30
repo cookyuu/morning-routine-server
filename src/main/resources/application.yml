@@ -1,7 +1,14 @@
 spring:
+  config:
+    import:
+      - optional:file:env/global.env[.properties]
   spring:
     application:
       name: morning-routine-server
 
   profiles:
     default: dev
+
+url:
+  crawling:
+    us-stock: ${US_STOCK_URL}

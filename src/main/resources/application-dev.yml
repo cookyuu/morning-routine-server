@@ -1,5 +1,5 @@
 server:
-  port: 19596
+  port: ${SERVICE_PORT}
 
 spring:
   config:
@@ -8,9 +8,8 @@ spring:
     import:
       - optional:file:env/dev.env[.properties]
 
-
   datasource:
-    driver-class-name: org.postgresql.Driver
+    driver-class-name: ${DB_DRIVER_CLASS_NAME}
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
