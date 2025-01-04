@@ -33,7 +33,15 @@ public enum IndicatorsSymbol {
     JPY("USD/JPY", "달러/엔", Country.COMMON),
     CNY("USD/CNY", "달러/위안", Country.COMMON),
     KRW("USD/KRW", "달러/원", Country.COMMON),
-    EUR("USD/EUR", "달러/유로", Country.COMMON);
+    EUR("USD/EUR", "달러/유로", Country.COMMON),
+
+    // 코인
+    BTC("BTC", "비트코인", Country.COMMON),
+    ETH("ETH", "이더리움", Country.COMMON),
+    XRP("XRP", "리플", Country.COMMON),
+    USDT("USTD", "테더", Country.COMMON),
+    SOL("SOL", "솔라나", Country.COMMON),
+    DOGE("DOGE", "도지코인", Country.COMMON);
 
     private static final Map<String, IndicatorsSymbol> SYMBOL_MAP =
             Collections.unmodifiableMap(Stream.of(values())
@@ -53,6 +61,17 @@ public enum IndicatorsSymbol {
         symbols.add(CNY);
         symbols.add(KRW);
         symbols.add(EUR);
+        return symbols;
+    }
+
+    public static List<IndicatorsSymbol> getCoinSymbol() {
+        List<IndicatorsSymbol> symbols = new ArrayList<>();
+        symbols.add(BTC);
+        symbols.add(ETH);
+        symbols.add(XRP);
+        symbols.add(USDT);
+        symbols.add(SOL);
+        symbols.add(DOGE);
         return symbols;
     }
 

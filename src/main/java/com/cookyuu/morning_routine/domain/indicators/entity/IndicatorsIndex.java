@@ -40,7 +40,7 @@ public class IndicatorsIndex extends BaseTimeEntity {
     private Indicators indicators;
 
     @Builder
-    public IndicatorsIndex(float netChange, float percentChange, float price, boolean hasPositivePrice, LocalDate asOfDate, Indicators indicators) {
+    public IndicatorsIndex(double netChange, double percentChange, double price, boolean hasPositivePrice, LocalDate asOfDate, Indicators indicators) {
         this.netChange = netChange;
         this.percentChange = percentChange;
         this.price = price;
