@@ -9,6 +9,12 @@ spring:
   profiles:
     default: dev
 
-url:
-  crawling:
-    us-stock: ${US_STOCK_URL}
+collector:
+  us-stock:
+    url: ${US_STOCK_URL}
+  exchange:
+    url: ${EXCHANGE_URL}
+    api-key: ${EXCHANGE_API_KEY}
+    data-code: ${EXCHANGE_DATA_CODE}
+  stock-indicators:
+    url : ${STOCK_INDICATORS_URL}
