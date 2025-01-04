@@ -47,8 +47,8 @@ public class StockIndicatorsCrawler implements IndicatorsCrawler {
             Document document = conn.get();
             crawlingDataList = getIndicatorsList(document);
 
-        } catch (IOException ignored) {
-            log.error("[Crawling] Exception : ", ignored);
+        } catch (IOException e) {
+            log.error("[Crawling] Exception : ", e);
         }
         return crawlingDataList;
     }

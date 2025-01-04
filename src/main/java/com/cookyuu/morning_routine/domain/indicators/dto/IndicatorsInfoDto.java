@@ -47,9 +47,9 @@ public class IndicatorsInfoDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class IndexInfo {
-        private float netChange;
-        private float percentChange;
-        private float price;
+        private double netChange;
+        private double percentChange;
+        private double price;
         private boolean hasPositivePrice;
         private LocalDate asOfDate;
 
@@ -64,7 +64,7 @@ public class IndicatorsInfoDto {
                     .build();
         }
 
-        public void setIndexInfo(float netChange, float percentChange, float price, boolean hasPositivePrice, LocalDate asOfDate) {
+        public void setIndexInfo(double netChange, double percentChange, double price, boolean hasPositivePrice, LocalDate asOfDate) {
             this.netChange = netChange;
             this.percentChange = percentChange;
             this.price = price;
