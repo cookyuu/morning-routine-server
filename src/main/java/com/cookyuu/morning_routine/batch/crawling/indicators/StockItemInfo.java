@@ -1,4 +1,4 @@
-package com.cookyuu.morning_routine.domain.indicators.dto.crawler;
+package com.cookyuu.morning_routine.batch.crawling.indicators;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class StockIndicatorsInfo {
+public class StockItemInfo {
     private String name;
     private float endPrice;
     private float highestPrice;

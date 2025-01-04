@@ -13,8 +13,6 @@ collector:
   us-stock:
     url: ${US_STOCK_URL}
   exchange:
-    url: ${EXCHANGE_URL}
-    api-key: ${EXCHANGE_API_KEY}
-    data-code: ${EXCHANGE_DATA_CODE}
+    url: ${EXCHANGE_RATE_INDICATORS_URL}
   stock-indicators:
     url : ${STOCK_INDICATORS_URL}

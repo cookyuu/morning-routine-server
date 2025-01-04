@@ -4,7 +4,9 @@ import com.cookyuu.morning_routine.global.exception.domain.MRCrawlingException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -25,7 +27,13 @@ public enum IndicatorsSymbol {
     DAX("germany-30","DAX derived", Country.GER),
     JPN("japan-ni225","닛케이 derived", Country.JPN),
     CHNA50("ftse-china-a50","China A50", Country.CHN),
-    HANGSEN("hang-sen-40", "항셍 derived", Country.HOK);
+    HANGSEN("hang-sen-40", "항셍 derived", Country.HOK),
+
+    // 환율
+    JPY("USD/JPY", "달러/엔", Country.COMMON),
+    CNY("USD/CNY", "달러/위안", Country.COMMON),
+    KRW("USD/KRW", "달러/원", Country.COMMON),
+    EUR("USD/EUR", "달러/유로", Country.COMMON);
 
     private static final Map<String, IndicatorsSymbol> SYMBOL_MAP =
             Collections.unmodifiableMap(Stream.of(values())
@@ -35,8 +43,17 @@ public enum IndicatorsSymbol {
     private String name;
     private Country country;
 
-    public static IndicatorsSymbol getSymbol(String name) {
+    public static IndicatorsSymbol getSymbolByName(String name) {
         return SYMBOL_MAP.getOrDefault(name, null);
+    }
+
+    public static List<IndicatorsSymbol> getExchangeSymbol() {
+        List<IndicatorsSymbol> symbols = new ArrayList<>();
+        symbols.add(JPY);
+        symbols.add(CNY);
+        symbols.add(KRW);
+        symbols.add(EUR);
+        return symbols;
     }
 
 }

@@ -1,33 +1,35 @@
 package com.cookyuu.morning_routine.domain.indicators.crawler;
 
+import com.cookyuu.morning_routine.batch.crawling.indicators.ExchangeItemInfo;
 import com.cookyuu.morning_routine.domain.indicators.dto.IndicatorsInfoDto;
-import com.cookyuu.morning_routine.domain.indicators.dto.crawler.ExchangeRateInfo;
+import com.cookyuu.morning_routine.domain.indicators.entity.Indicators;
+import com.cookyuu.morning_routine.domain.indicators.entity.IndicatorsSymbol;
 import com.cookyuu.morning_routine.domain.indicators.entity.IndicatorsType;
+import com.cookyuu.morning_routine.global.utils.RestClientUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.*;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class ExchangeRateCrawler implements IndicatorsCrawler {
 
     @Value("${collector.exchange.url}")
-    private String exchangeOpenUrl;
+    private String exchangeRateIndicatorsUrl;
+
+    private final RestClientUtils restClientUtils;
 
     @Override
     public List<IndicatorsInfoDto> crawlingIndicators() throws JsonProcessingException {
-        getIndicatorsInfoList();
-        return null;
+        ExchangeItemInfo crawlingData = getExchangeCrawlingData();
+        return convertToIndicatorsInfoList(crawlingData);
     }
 
     @Override
@@ -35,51 +37,44 @@ public class ExchangeRateCrawler implements IndicatorsCrawler {
         return IndicatorsType.EXCHANGE_RATE;
     }
 
-    private void getIndicatorsInfoList() {
-        final String crawlingUrl = "https://finance.naver.com/marketindex/";
-        log.info("[Indicators] crawling url : {}", crawlingUrl);
-        Connection conn = Jsoup.connect(crawlingUrl);
-
-        try {
-            Document document = conn.get();
-            List<ExchangeRateInfo> tbody = getIndicatorsList(document);   // 데이터 리스트
-        } catch (IOException ignored) {
-        }
+    private ExchangeItemInfo getExchangeCrawlingData() throws JsonProcessingException {
+        String crawlingResData = restClientUtils.httpCallGetJsonString(exchangeRateIndicatorsUrl);
+        log.info("Data : {}", crawlingResData);
+        ObjectMapper objectMapper = new ObjectMapper();
+        ExchangeItemInfo resCrawlingData = objectMapper.readValue(crawlingResData, ExchangeItemInfo.class);
+        log.info("[Crwaling::Exchange] data : {}", resCrawlingData.getDataAsOf());
+        log.info("[Crawling::Exchange] data : {}", resCrawlingData.getConversions().get("USD").getKRW());
+        return resCrawlingData;
     }
 
-    private String getIndicatorsHeader(Document document) {
-        Elements stockTableBody = document.select("table.type_2 thead tr");
-        StringBuilder sb = new StringBuilder();
-        for (Element element : stockTableBody) {
-            for (Element td : element.select("th")) {
-                sb.append(td.text());
-                sb.append("   ");
-            }
-            break;
+    private List<IndicatorsInfoDto> convertToIndicatorsInfoList(ExchangeItemInfo crawlingData) {
+        List<IndicatorsInfoDto> resDataList = new ArrayList<>();
+        LocalDate now = LocalDate.now();
+        LocalDate asOfDate = LocalDate.of(now.getYear(), now.getMonthValue(), now.getDayOfMonth());
+        Map<String, ExchangeItemInfo.ConversionsInfo> conversionsMap = crawlingData.getConversions();
+        ExchangeItemInfo.ConversionsInfo conversionsInfo = conversionsMap.get("USD");
+        List<IndicatorsSymbol> symbols = IndicatorsSymbol.getExchangeSymbol();
+        for (IndicatorsSymbol symbol : symbols) {
+            IndicatorsInfoDto indicatorsInfo = new IndicatorsInfoDto();
+            indicatorsInfo.setIndicatorsInfo(
+                    IndicatorsInfoDto.IndicatorsInfo.builder()
+                            .symbol(symbol.getSymbol())
+                            .name(symbol.getName())
+                            .country(symbol.getCountry())
+                            .indicatorsType(IndicatorsType.EXCHANGE_RATE)
+                            .build()
+            );
+            indicatorsInfo.setIndexInfo(
+                    IndicatorsInfoDto.IndexInfo.builder()
+                            .netChange(0)
+                            .percentChange(0)
+                            .price(conversionsInfo.getPriceBySymbol(symbol))
+                            .hasPositivePrice(true)
+                            .asOfDate(asOfDate)
+                            .build()
+            );
+            resDataList.add(indicatorsInfo);
         }
-        return sb.toString();
-    }
-
-    private List<ExchangeRateInfo> getIndicatorsList(Document document) {
-        List<ExchangeRateInfo> crawlingDataList = new ArrayList<>();
-        Elements exchangeTable = document.select(".data_lst");
-        Elements rows = exchangeTable.select("li");
-        log.info("[Indicators] Data rows : {}", rows.size());
-        for (Element row : rows) {
-            ExchangeRateInfo exchangeRateInfo = new ExchangeRateInfo();
-            List<String> dataLine = new ArrayList<>();
-            log.info("row : {}", row.toString());
-
-            String name = row.select(".h_lst").text();
-            String price = row.select(".value").text();
-            String priceCurrency = row.select(".blind").get(1).text();
-            String chagnePrice = row.select(".change").text().trim();
-            String changeUpDown = row.select(".blind").last().text();
-
-            log.info("name : {}, price : {}, changePrice : {}", name, price, chagnePrice);
-            log.info("통화 단위 : {}, 상승 하락 : {}",priceCurrency, changeUpDown);
-        }
-
-        return crawlingDataList;
+        return resDataList;
     }
 }

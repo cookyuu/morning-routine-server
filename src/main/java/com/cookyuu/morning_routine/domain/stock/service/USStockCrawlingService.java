@@ -13,16 +13,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class USStockCrawlingService implements StockCrawlingService{
 
-    @Value("${url.crawling.us-stock}")
+    @Value("${collector.us-stock.url}")
     private String stockCrawlingBaseUrl;
 
     private final RestClientUtils restClientUtils;

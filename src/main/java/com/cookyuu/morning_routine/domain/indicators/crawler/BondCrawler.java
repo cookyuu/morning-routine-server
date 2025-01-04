@@ -1,7 +1,6 @@
 package com.cookyuu.morning_routine.domain.indicators.crawler;
 
 import com.cookyuu.morning_routine.domain.indicators.dto.IndicatorsInfoDto;
-import com.cookyuu.morning_routine.domain.indicators.dto.crawler.ExchangeRateInfo;
 import com.cookyuu.morning_routine.domain.indicators.entity.IndicatorsType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +31,7 @@ public class BondCrawler implements IndicatorsCrawler {
 
         try {
             Document document = conn.get();
-            List<ExchangeRateInfo> tbody = getIndicatorsList(document);   // 데이터 리스트
+            List<String> tbody = getIndicatorsList(document);   // 데이터 리스트
         } catch (IOException ignored) {
         }
     }
@@ -50,13 +49,13 @@ public class BondCrawler implements IndicatorsCrawler {
         return sb.toString();
     }
 
-    private List<ExchangeRateInfo> getIndicatorsList(Document document) {
-        List<ExchangeRateInfo> crawlingDataList = new ArrayList<>();
+    private List<String> getIndicatorsList(Document document) {
+        List<String> crawlingDataList = new ArrayList<>();
         log.info("[Crawling] data : {}", document.toString());
         Elements exchangeTable = document.select(".data_lst");
         List<Element> rows = exchangeTable.select("tr");
         for (Element row : rows) {
-            ExchangeRateInfo exchangeRateInfo = new ExchangeRateInfo();
+            String exchangeRateInfo = "";
             List<String> dataLine = new ArrayList<>();
             log.info("row : {}", row.toString());
 

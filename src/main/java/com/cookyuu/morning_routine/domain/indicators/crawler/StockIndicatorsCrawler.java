@@ -1,15 +1,12 @@
 package com.cookyuu.morning_routine.domain.indicators.crawler;
 
 import com.cookyuu.morning_routine.domain.indicators.dto.IndicatorsInfoDto;
-import com.cookyuu.morning_routine.domain.indicators.dto.crawler.StockIndicatorsInfo;
+import com.cookyuu.morning_routine.batch.crawling.indicators.StockItemInfo;
 import com.cookyuu.morning_routine.domain.indicators.entity.IndicatorsSymbol;
 import com.cookyuu.morning_routine.domain.indicators.entity.IndicatorsType;
-import com.cookyuu.morning_routine.domain.indicators.service.IndicatorsService;
 import com.cookyuu.morning_routine.global.code.ResultCode;
 import com.cookyuu.morning_routine.global.exception.domain.MRCrawlingException;
-import com.cookyuu.morning_routine.global.utils.RestClientUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -26,15 +23,14 @@ import java.util.List;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class StockIndicatorsCrawler implements IndicatorsCrawler {
     @Value("${collector.stock-indicators.url}")
     private String stockIndicatorsUrl;
 
     @Override
     public List<IndicatorsInfoDto> crawlingIndicators() throws JsonProcessingException {
-        List<StockIndicatorsInfo> crawlingStockIndicatorsList = getIndicatorsInfoList();
-        return convertResList(crawlingStockIndicatorsList);
+        List<StockItemInfo> crawlingStockIndicatorsList = getIndicatorsInfoList();
+        return convertToIndicatorsInfoList(crawlingStockIndicatorsList);
     }
 
     @Override
@@ -42,9 +38,9 @@ public class StockIndicatorsCrawler implements IndicatorsCrawler {
         return IndicatorsType.STOCK;
     }
 
-    private List<StockIndicatorsInfo> getIndicatorsInfoList() {
-        List<StockIndicatorsInfo> crawlingDataList = new ArrayList<>();
-                log.info("[Indicators] crawling url : {}", stockIndicatorsUrl);
+    private List<StockItemInfo> getIndicatorsInfoList() {
+        List<StockItemInfo> crawlingDataList = new ArrayList<>();
+        log.info("[Indicators] crawling url : {}", stockIndicatorsUrl);
         Connection conn = Jsoup.connect(stockIndicatorsUrl);
 
         try {
@@ -57,8 +53,8 @@ public class StockIndicatorsCrawler implements IndicatorsCrawler {
         return crawlingDataList;
     }
 
-    private List<StockIndicatorsInfo> getIndicatorsList(Document document) {
-        List<StockIndicatorsInfo> crawlingDataList = new ArrayList<>();
+    private List<StockItemInfo> getIndicatorsList(Document document) {
+        List<StockItemInfo> crawlingDataList = new ArrayList<>();
         Elements indicatorsData = document.select(".datatable-v2_table__93S4Y");
         List<Element> rows = indicatorsData.select(".datatable-v2_body__8TXQk tr");
         for (Element row : rows) {
@@ -89,7 +85,7 @@ public class StockIndicatorsCrawler implements IndicatorsCrawler {
                 throw new MRCrawlingException(ResultCode.CRAWLING_IS_FAIL, "크롤링 데이터가 기존과 일치하지 않습니다.");
             }
 
-            StockIndicatorsInfo stockIndicatorsInfo = StockIndicatorsInfo.builder()
+            StockItemInfo stockItemInfo = StockItemInfo.builder()
                     .name(name)
                     .endPrice(endPrice)
                     .highestPrice(highestPrice)
@@ -100,16 +96,16 @@ public class StockIndicatorsCrawler implements IndicatorsCrawler {
                     .asOfDate(asOfDate)
                     .build();
             log.info("name : {}, endPrice : {}, changePrcie : {}, changePct : {}, hasPositive :{}, asOfDate : {}", name, endPrice, changePrice, changePct, hasPositivePrice, asOfDate);
-            crawlingDataList.add(stockIndicatorsInfo);
+            crawlingDataList.add(stockItemInfo);
         }
         return crawlingDataList;
     }
 
-    private List<IndicatorsInfoDto> convertResList(List<StockIndicatorsInfo> stockIndicatorsInfoList) {
+    private List<IndicatorsInfoDto> convertToIndicatorsInfoList(List<StockItemInfo> stockItemInfoList) {
         log.info("[Crawling::Stock] convert res data list.");
         List<IndicatorsInfoDto> resList = new ArrayList<>();
-        for (StockIndicatorsInfo info : stockIndicatorsInfoList) {
-            IndicatorsSymbol symbol = IndicatorsSymbol.getSymbol(info.getName());
+        for (StockItemInfo info : stockItemInfoList) {
+            IndicatorsSymbol symbol = IndicatorsSymbol.getSymbolByName(info.getName());
             if (symbol == null) continue;
             IndicatorsInfoDto indicatorsInfo = new IndicatorsInfoDto();
             indicatorsInfo.setIndicatorsInfo(IndicatorsInfoDto.IndicatorsInfo.builder()

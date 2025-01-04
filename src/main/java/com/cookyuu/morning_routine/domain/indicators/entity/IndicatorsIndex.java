@@ -21,13 +21,13 @@ public class IndicatorsIndex extends BaseTimeEntity {
     private Long id;
 
     @Column(name = "net_change", nullable = false)
-    private float netChange;
+    private double netChange;
 
     @Column(name = "percent_change", nullable = false)
-    private float percentChange;
+    private double percentChange;
 
     @Column(name = "price", nullable = false)
-    private float price;
+    private double price;
 
     @Column(name = "has_positive_price", nullable = false)
     private boolean hasPositivePrice;

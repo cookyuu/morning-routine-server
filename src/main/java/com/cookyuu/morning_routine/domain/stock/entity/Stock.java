@@ -21,10 +21,10 @@ public class Stock extends BaseTimeEntity {
     @Column(name = "stock_symbol")
     private String symbol;
 
-    @Column(name = "name")
+    @Column(name = "stock_name")
     private String name;
 
-    @Column(name = "country")
+    @Column(name = "stock_country")
     private Country country;
 
     @OneToMany(mappedBy = "stock")

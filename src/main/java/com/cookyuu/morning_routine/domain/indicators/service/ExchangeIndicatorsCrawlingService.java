@@ -17,7 +17,7 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class StockIndicatorsCrawlingService implements IndicatorsCrawlingService{
+public class ExchangeIndicatorsCrawlingService implements IndicatorsCrawlingService{
     private final IndicatorsRepository indicatorsRepository;
     private final IndicatorsIndexRepository indicatorsIndexRepository;
 
@@ -34,11 +34,11 @@ public class StockIndicatorsCrawlingService implements IndicatorsCrawlingService
             indicatorsIndexList.add(indicatorsIndex);
         }
         indicatorsIndexRepository.saveAll(indicatorsIndexList);
-        log.info("[Crawling::StockIndicators] Save Stock indicators data complete.");
+        log.info("[Crawling::ExchangeRateIndicators] Save Exchange rate data complete.");
     }
 
     @Override
     public IndicatorsType getIndicatorsType() {
-        return IndicatorsType.STOCK;
+        return IndicatorsType.EXCHANGE_RATE;
     }
 }
