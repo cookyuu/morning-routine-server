@@ -41,7 +41,16 @@ public enum IndicatorsSymbol {
     XRP("XRP", "리플", Country.COMMON),
     USDT("USTD", "테더", Country.COMMON),
     SOL("SOL", "솔라나", Country.COMMON),
-    DOGE("DOGE", "도지코인", Country.COMMON);
+    DOGE("DOGE", "도지코인", Country.COMMON),
+
+    // 원자재
+    GOLD("GOLD", "금 derived", Country.COMMON),
+    SILVER("SILVER", "은 derived", Country.COMMON),
+    WTI_OIL("WTI-OIL", "WTI유 derived", Country.COMMON),
+    BRANT_OIL("BRANT-OIL", "브랜트유 derived", Country.COMMON),
+    GAS("GAS", "천연가스 derived", Country.COMMON),
+    CONN("CONN", "미국 옥수수 derived", Country.COMMON)
+    ;
 
     private static final Map<String, IndicatorsSymbol> SYMBOL_MAP =
             Collections.unmodifiableMap(Stream.of(values())

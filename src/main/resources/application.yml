@@ -18,3 +18,5 @@ collector:
     url: ${STOCK_INDICATORS_URL}
   coin:
     url: ${COIN_INDICATORS_URL}
+  material:
+    url: ${MATERIAL_INDICATORS_URL}
