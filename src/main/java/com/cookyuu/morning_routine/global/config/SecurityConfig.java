@@ -30,7 +30,7 @@ public class SecurityConfig {
     private final CustomAuthenticationEntryPoint authenticationEntryPoint;
 
     private static final String[] AUTH_WHITELIST = {
-            "/api/v1/auth/**",
+            "/api/auth/**", "/api/stock/**",
             "/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**"
     };
     private static final String[] AUTH_ADMIN = {

@@ -3,6 +3,7 @@ package com.cookyuu.morning_routine.domain.stock.entity;
 import com.cookyuu.morning_routine.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,18 +21,22 @@ public class Stock extends BaseTimeEntity {
     @Column(name = "stock_symbol")
     private String symbol;
 
-    @Column(name = "name")
+    @Column(name = "stock_name")
     private String name;
 
-    @Column(name = "sector")
-    private String sector;
-
-    @Column(name = "country")
-    private String country;
+    @Column(name = "stock_country")
+    private Country country;
 
     @OneToMany(mappedBy = "stock")
     private List<StockIndex> stockIndices = new ArrayList<>();
 
     @OneToMany(mappedBy = "stock")
     private List<StockInterest> stockInterests = new ArrayList<>();
+
+    @Builder
+    public Stock(String symbol, String name, Country country) {
+        this.symbol = symbol;
+        this.name = name;
+        this.country = country;
+    }
 }

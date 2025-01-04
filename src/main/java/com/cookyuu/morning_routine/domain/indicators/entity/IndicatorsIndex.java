@@ -3,6 +3,7 @@ package com.cookyuu.morning_routine.domain.indicators.entity;
 import com.cookyuu.morning_routine.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,13 +21,16 @@ public class IndicatorsIndex extends BaseTimeEntity {
     private Long id;
 
     @Column(name = "net_change", nullable = false)
-    private Long netChange;
+    private double netChange;
 
     @Column(name = "percent_change", nullable = false)
-    private Long percentChange;
+    private double percentChange;
 
     @Column(name = "price", nullable = false)
-    private Long price;
+    private double price;
+
+    @Column(name = "has_positive_price", nullable = false)
+    private boolean hasPositivePrice;
 
     @Column(name = "as_of_date", nullable = false)
     private LocalDate asOfDate;
@@ -34,4 +38,14 @@ public class IndicatorsIndex extends BaseTimeEntity {
     @ManyToOne
     @JoinColumn(name = "indicators_symbol")
     private Indicators indicators;
+
+    @Builder
+    public IndicatorsIndex(float netChange, float percentChange, float price, boolean hasPositivePrice, LocalDate asOfDate, Indicators indicators) {
+        this.netChange = netChange;
+        this.percentChange = percentChange;
+        this.price = price;
+        this.hasPositivePrice = hasPositivePrice;
+        this.asOfDate = asOfDate;
+        this.indicators = indicators;
+    }
 }
