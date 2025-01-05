@@ -3,6 +3,7 @@ package com.cookyuu.morning_routine.domain.region.entity;
 import com.cookyuu.morning_routine.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "MR_REGION")
@@ -18,6 +20,9 @@ public class Region extends BaseTimeEntity {
     @Id
     @Column(name = "region_code")
     private String code;
+
+    @Column(name = "classification")
+    private String classification;
 
     @Column(name = "first_region")
     private String firstRegion;
