@@ -19,11 +19,38 @@ public class Region extends BaseTimeEntity {
     @Column(name = "region_code")
     private String code;
 
-    @Column(name = "region_full_name", nullable = false)
-    private String fullName;
+    @Column(name = "first_region")
+    private String firstRegion;
 
-    @Column(name = "region_spot_name", nullable = false)
-    private String spotName;
+    @Column(name = "second_region")
+    private String secondRegion;
+
+    @Column(name = "third_region")
+    private String thirdRegion;
+
+    @Column(name = "grid_x")
+    private int gridX;
+
+    @Column(name = "grid_y")
+    private int gridY;
+
+    @Column(name = "longitude_hour")
+    private int longitudeHour;
+
+    @Column(name = "longitude_min")
+    private int longitudeMin;
+
+    @Column(name = "longitude_sec")
+    private float longitudeSec;
+
+    @Column(name = "latitude_hour")
+    private int latitudeHour;
+
+    @Column(name = "latitude_min")
+    private int latitudeMin;
+
+    @Column(name = "latitude_sec")
+    private float latitudeSec;
 
     @OneToMany(mappedBy = "region")
     private List<RegionInterest> regionInterests = new ArrayList<>();
