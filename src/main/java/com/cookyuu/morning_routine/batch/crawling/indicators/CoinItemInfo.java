@@ -5,17 +5,18 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class StockItemInfo {
+public class CoinItemInfo {
+    private String symbol;
     private String name;
-    private float endPrice;
-    private float highestPrice;
-    private float lowestPrice;
-    private float changePrice;
-    private float changePct;
+    private double price;
+    private double changePrice;
+    private double changePct;
     private boolean hasPositivePrice;
-    private String asOfDate;
+    private LocalDate asOfDate;
 }

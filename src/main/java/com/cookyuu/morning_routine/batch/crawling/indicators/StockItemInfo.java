@@ -11,11 +11,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class StockItemInfo {
     private String name;
-    private float endPrice;
-    private float highestPrice;
-    private float lowestPrice;
-    private float changePrice;
-    private float changePct;
+    private double endPrice;
+    private double highestPrice;
+    private double lowestPrice;
+    private double changePrice;
+    private double changePct;
     private boolean hasPositivePrice;
     private String asOfDate;
 }
