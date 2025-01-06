@@ -126,4 +126,8 @@ public class MemberService {
         return memberRepository.findByLoginId(loginId).orElseThrow(()->
                 new MRMemberException(ResultCode.MEMBER_NOT_FOUND));
     }
+
+    public Member getMemberById(Long userId) {
+        return memberRepository.findById(userId).orElseThrow(MRMemberException::new);
+    }
 }

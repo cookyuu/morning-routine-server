@@ -4,11 +4,13 @@ import com.cookyuu.morning_routine.domain.member.entity.Member;
 import com.cookyuu.morning_routine.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "MR_REGION_INTEREST")

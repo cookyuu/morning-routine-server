@@ -4,8 +4,11 @@ import com.cookyuu.morning_routine.domain.region.entity.Region;
 import com.cookyuu.morning_routine.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -18,25 +21,25 @@ public class Weather extends BaseTimeEntity {
     @Column(name = "weather_id")
     private Long id;
 
-    @Column(name = "current_temperature")
-    private Long currentTemperature;
+    @Column(name = "weather_value")
+    private String value;
 
-    @Column(name = "micro_dust_status")
-    private String microDustStatus;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "weather_type")
+    private WeatherType type;
 
-    @Column(name = "today_min_temperature")
-    private Long todayMinTemperature;
-
-    @Column(name = "today_max_temperature")
-    private Long todayMaxTemperature;
-
-    @Column(name = "today_rain")
-    private boolean todayRain;
-
-    @Column(name = "today_snow")
-    private boolean todaySnow;
+    @Column(name = "forecast_date_time")
+    private LocalDateTime forecastDateTime;
 
     @ManyToOne
     @JoinColumn(name = "region_code")
     private Region region;
+
+    @Builder
+    public Weather(String value, WeatherType type, LocalDateTime forecastDateTime, Region region) {
+        this.value = value;
+        this.type = type;
+        this.forecastDateTime = forecastDateTime;
+        this.region = region;
+    }
 }

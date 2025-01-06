@@ -48,6 +48,10 @@ public enum ResultCode {
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "M-008", "해당 유저를 찾을 수 없습니다."),
     MEMBER_DETAIL_UPDATE_FAIL(HttpStatus.BAD_REQUEST, "M-009", "회원 정보 수정 실패."),
 
+    // Region
+    REGION_NOT_FOUND(HttpStatus.NOT_FOUND, "R-001", "해당 지역 데이터를 찾을 수 없습니다."),
+
+    // Collect
     CRAWLING_IS_FAIL(HttpStatus.BAD_REQUEST,"CW-001","크롤링 실패.");
 
 
