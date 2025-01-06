@@ -5,7 +5,7 @@ import com.cookyuu.morning_routine.global.exception.MRException;
 
 public class MRMemberException extends MRException {
     public MRMemberException() {
-        super(ResultCode.BAD_REQUEST);
+        super(ResultCode.MEMBER_NOT_FOUND);
     }
 
     public MRMemberException(ResultCode resultCode) {

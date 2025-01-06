@@ -1,8 +1,13 @@
 package com.cookyuu.morning_routine.domain.region.service;
 
+import com.cookyuu.morning_routine.domain.member.entity.Member;
+import com.cookyuu.morning_routine.domain.region.dto.RegisterInterestRegionDto;
 import com.cookyuu.morning_routine.domain.region.dto.RegisterRegionFromFileDto;
 import com.cookyuu.morning_routine.domain.region.entity.Region;
+import com.cookyuu.morning_routine.domain.region.entity.RegionInterest;
+import com.cookyuu.morning_routine.domain.region.repository.RegionInterestRepository;
 import com.cookyuu.morning_routine.domain.region.repository.RegionRepository;
+import com.cookyuu.morning_routine.global.exception.domain.MRRegionException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.openxml4j.util.ZipSecureFile;
@@ -30,6 +35,7 @@ public class RegionService {
     private String filePath;
 
     private final RegionRepository regionRepository;
+    private final RegionInterestRepository regionInterestRepository;
 
     public void registerFromFile() throws IOException {
         List<RegisterRegionFromFileDto.FileData> fileDataList = getResisterFileDataList();
@@ -106,4 +112,24 @@ public class RegionService {
         return fileDataList;
     }
 
+    public List<Region> getInterestRegions() {
+        List<Region> regions = new ArrayList<>();
+//        List<Region> regions = regionInterestRepository.findAllDuplicatedRegion();
+        return regions;
+    }
+
+    public Region findByCode(String code) {
+        return regionRepository.findById(code).orElseThrow(MRRegionException::new);
+    }
+
+    public void registerInterestRegion(RegisterInterestRegionDto regionInfo, Member member) {
+        Region region = findByCode(regionInfo.getCode());
+        RegionInterest regionInterest = RegionInterest.builder()
+                .region(region)
+                .member(member)
+                .build();
+        regionInterestRepository.save(regionInterest);
+        log.debug("[Region] Register interest region complete.");
+        log.debug("[Region] code : {}, first region name : {}", region.getCode(), region.getFirstRegion());
+    }
 }

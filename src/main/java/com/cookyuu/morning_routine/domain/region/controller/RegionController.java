@@ -1,9 +1,12 @@
 package com.cookyuu.morning_routine.domain.region.controller;
 
-import com.cookyuu.morning_routine.domain.region.dto.RegisterRegionFromFileDto;
+import com.cookyuu.morning_routine.domain.region.dto.RegisterInterestRegionDto;
+import com.cookyuu.morning_routine.domain.region.facade.RegionFacade;
 import com.cookyuu.morning_routine.domain.region.service.RegionService;
 import com.cookyuu.morning_routine.global.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +19,7 @@ import java.io.IOException;
 @RequestMapping("/api/region")
 public class RegionController {
     private final RegionService regionService;
+    private final RegionFacade regionFacade;
 
     @PostMapping("/registration/file")
     public ApiResponse<String> registerRegionFromFile() throws IOException {
@@ -23,4 +27,9 @@ public class RegionController {
         return ApiResponse.success("지역 등록 완료.");
     }
 
+    @PostMapping("/interest")
+    public ApiResponse<String> registerInterestRegion(@AuthenticationPrincipal UserDetails user, @RequestBody RegisterInterestRegionDto regionInfo) {
+        regionFacade.registerInterestRegion(regionInfo, Long.valueOf(user.getUsername()));
+        return ApiResponse.success("관심 지역 등록 완료.");
+    }
 }
