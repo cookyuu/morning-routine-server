@@ -114,7 +114,7 @@ public class RegionService {
 
     public List<Region> getInterestRegions() {
         List<Region> regions = new ArrayList<>();
-//        List<Region> regions = regionInterestRepository.findAllDuplicatedRegion();
+        regions = regionInterestRepository.findAllDuplicatedRegion();
         return regions;
     }
 

@@ -4,6 +4,7 @@ import com.cookyuu.morning_routine.domain.region.entity.Region;
 import com.cookyuu.morning_routine.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -33,4 +34,12 @@ public class Weather extends BaseTimeEntity {
     @ManyToOne
     @JoinColumn(name = "region_code")
     private Region region;
+
+    @Builder
+    public Weather(String value, WeatherType type, LocalDateTime forecastDateTime, Region region) {
+        this.value = value;
+        this.type = type;
+        this.forecastDateTime = forecastDateTime;
+        this.region = region;
+    }
 }

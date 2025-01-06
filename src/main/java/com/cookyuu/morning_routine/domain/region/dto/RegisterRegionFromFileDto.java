@@ -1,7 +1,6 @@
 package com.cookyuu.morning_routine.domain.region.dto;
 
 import com.cookyuu.morning_routine.domain.region.entity.Region;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,19 +21,19 @@ public class RegisterRegionFromFileDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class FileData {
-        private String classification; // 0
-        private String code; // 1
-        private String firstRegion; // 2
-        private String secondRegion;    // 3
-        private String thirdRegion; // 4
-        private int gridX;  // 5
-        private int gridY;  // 6
-        private int longitudeHour;   // 7
-        private int longitudeMin;   // 8
-        private float longitudeSec; // 9
-        private int latitudeHour;   // 10
-        private int latitudeMin; // 11
-        private float latitudeSec; // 12
+        private String classification;
+        private String code;
+        private String firstRegion;
+        private String secondRegion;
+        private String thirdRegion;
+        private int gridX;
+        private int gridY;
+        private int longitudeHour;
+        private int longitudeMin;
+        private float longitudeSec;
+        private int latitudeHour;
+        private int latitudeMin;
+        private float latitudeSec;
 
         public Region toEntity() {
             return Region.builder()

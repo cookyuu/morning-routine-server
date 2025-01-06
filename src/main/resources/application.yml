@@ -22,3 +22,8 @@ collector:
     url: ${MATERIAL_INDICATORS_URL}
   region:
     path: ${REGION_FILE_PATH}
+  weather:
+    url: ${WEATHER_OPEN_API_URL}
+    service-key: ${WEATHER_OPEN_API_SERVICE_KEY}
+    rows-num: ${WEATHER_OPEN_API_ROWS_NUM}
+    type: JSON
