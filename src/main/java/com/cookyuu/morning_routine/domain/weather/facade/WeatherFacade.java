@@ -3,7 +3,7 @@ package com.cookyuu.morning_routine.domain.weather.facade;
 import com.cookyuu.morning_routine.domain.region.entity.Region;
 import com.cookyuu.morning_routine.domain.region.service.RegionService;
 import com.cookyuu.morning_routine.domain.weather.crawler.WeatherCrawler;
-import com.cookyuu.morning_routine.domain.weather.dto.CollectWeatherInfo;
+import com.cookyuu.morning_routine.domain.weather.dto.WeatherDetailDto;
 import com.cookyuu.morning_routine.domain.weather.entity.Weather;
 import com.cookyuu.morning_routine.domain.weather.service.WeatherService;
 import lombok.RequiredArgsConstructor;
@@ -32,8 +32,10 @@ public class WeatherFacade {
         log.info("[Weather] Collect weather data of interest regions. complete, region cnt : {}, row cnt : {}", interestRegions.size(), weatherInfoList.size());
     }
 
-    public CollectWeatherInfo getWeatherDetail(String region) {
+    public WeatherDetailDto getWeatherDetail(String reqRegion) {
         // 지역 분리 후 region 테이블에서 찾기
+        Region region = regionService.getRegionForWeatherDetail(reqRegion);
+        WeatherDetailDto weatherDetailInfo = weatherService.getWeatherDetail(region);
         //
         return null;
     }

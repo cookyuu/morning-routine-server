@@ -63,25 +63,11 @@ public class WeatherItemInfo {
                         private String baseDate;
                         private String baseTime;
                         private String category; // WeatherType
-                        private String fcstValue;
                         private String fcstDate;
                         private String fcstTime;
+                        private String fcstValue;
                         private int nx;
                         private int ny;
-
-                        public Weather toEntity(Region region) {
-                            int yyyy = Integer.parseInt(fcstDate.substring(0,4));
-                            int MM = Integer.parseInt(fcstDate.substring(4, 6));
-                            int dd = Integer.parseInt(fcstDate.substring(6, 8));
-                            int hh = Integer.parseInt(fcstTime.substring(0,2));
-                            int mm = Integer.parseInt(fcstTime.substring(2, 4));
-                            return Weather.builder()
-                                    .value(fcstValue)
-                                    .type(WeatherType.valueOf(category))
-                                    .forecastDateTime(LocalDateTime.of(yyyy, MM, dd, hh, mm))
-                                    .region(region)
-                                    .build();
-                        }
                     }
                 }
             }

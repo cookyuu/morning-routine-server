@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -33,6 +35,9 @@ public class RegionService {
 
     @Value("${collector.region.path}")
     private String filePath;
+
+    static String[] specialRegions = {"서울특별시", "부산광역시", "대구광역시", "울산광역시", "인천광역시", "대전광역시", "광주광역시"};
+    static final List<String> specialRegionsList = List.of(specialRegions);
 
     private final RegionRepository regionRepository;
     private final RegionInterestRepository regionInterestRepository;
@@ -113,7 +118,7 @@ public class RegionService {
     }
 
     public List<Region> getInterestRegions() {
-        List<Region> regions = new ArrayList<>();
+        List<Region> regions;
         regions = regionInterestRepository.findAllDuplicatedRegion();
         return regions;
     }
@@ -122,6 +127,7 @@ public class RegionService {
         return regionRepository.findById(code).orElseThrow(MRRegionException::new);
     }
 
+    @Transactional
     public void registerInterestRegion(RegisterInterestRegionDto regionInfo, Member member) {
         Region region = findByCode(regionInfo.getCode());
         RegionInterest regionInterest = RegionInterest.builder()
@@ -131,5 +137,18 @@ public class RegionService {
         regionInterestRepository.save(regionInterest);
         log.debug("[Region] Register interest region complete.");
         log.debug("[Region] code : {}, first region name : {}", region.getCode(), region.getFirstRegion());
+    }
+
+    public Region getRegionForWeatherDetail(String reqRegion) {
+        String[] splitRegions = reqRegion.split("\\+");
+        int splitRegionDepth = splitRegions.length;
+
+        if (splitRegionDepth==3 && specialRegionsList.contains(splitRegions[0])) {
+            return regionRepository.findByThirdRegion(splitRegions[2]).orElseThrow(MRRegionException::new);
+        }
+        if (splitRegionDepth==1) {
+            return regionRepository.findByFirstRegion(splitRegions[0]).orElseThrow(MRRegionException::new);
+        }
+        return regionRepository.findBySecondRegion(splitRegions[1]).orElseThrow(MRRegionException::new);
     }
 }

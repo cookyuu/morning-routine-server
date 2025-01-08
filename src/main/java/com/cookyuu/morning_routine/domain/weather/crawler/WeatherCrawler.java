@@ -2,6 +2,7 @@ package com.cookyuu.morning_routine.domain.weather.crawler;
 
 import com.cookyuu.morning_routine.batch.crawling.weather.WeatherItemInfo;
 import com.cookyuu.morning_routine.domain.region.entity.Region;
+import com.cookyuu.morning_routine.domain.weather.dto.WeatherDivideByTimeDto;
 import com.cookyuu.morning_routine.domain.weather.entity.Weather;
 import com.cookyuu.morning_routine.domain.weather.entity.WeatherApiParamKey;
 import com.cookyuu.morning_routine.global.utils.RestClientUtils;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.net.URISyntaxException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Slf4j
@@ -34,19 +36,10 @@ public class WeatherCrawler {
 
     public List<Weather> collectWeatherData(List<Region> regions) throws URISyntaxException {
         List<WeatherItemInfo> collectDataList = collectFromOpenApi(regions);
-        return convertToEntityList(collectDataList);
+        List<WeatherDivideByTimeDto> dividedList = divideCollectDataByTime(collectDataList);
+        return convertToEntityList(dividedList);
     }
 
-    private List<Weather> convertToEntityList(List<WeatherItemInfo> collectDataList) {
-        List<Weather> entityList = new ArrayList<>();
-        for (WeatherItemInfo collectData : collectDataList) {
-            List<WeatherItemInfo.ResData.Response.Body.Items.Item> items = collectData.getData().getResponse().getBody().getItems().getItem();
-            for (WeatherItemInfo.ResData.Response.Body.Items.Item item  : items) {
-                entityList.add(item.toEntity(collectData.getRegion()));
-            }
-        }
-        return entityList;
-    }
 
     private List<WeatherItemInfo> collectFromOpenApi(List<Region> regions) throws URISyntaxException {
         List<WeatherItemInfo> weatherItemInfoList = new ArrayList<>();
@@ -78,6 +71,46 @@ public class WeatherCrawler {
                 weatherItemInfoList.add(WeatherItemInfo.builder().region(region).data(collectData).build());
             }
         }
+        if (weatherItemInfoList.isEmpty()) {
+            log.info("[Weather] Collection weather data is empty.");
+        }
+        log.info("[Weather] Collect weather data complete. total row cnt : {}", weatherItemInfoList.get(0).getData().getResponse().getBody().getTotalCount());
         return weatherItemInfoList;
+    }
+
+    private List<WeatherDivideByTimeDto> divideCollectDataByTime(List<WeatherItemInfo> collectDataList) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        List<WeatherDivideByTimeDto> dividedList = new ArrayList<>();
+        for (WeatherItemInfo collectData : collectDataList) {
+            Map<String, Map<String, String>> dividedWeatherInfoMap = new HashMap<>();
+
+            List<WeatherItemInfo.ResData.Response.Body.Items.Item> items = collectData.getData().getResponse().getBody().getItems().getItem();
+            for (WeatherItemInfo.ResData.Response.Body.Items.Item item  : items) {
+                if (dividedWeatherInfoMap.containsKey(item.getFcstTime())) {
+                    Map<String, String> weatherInfo = dividedWeatherInfoMap.get(item.getFcstTime());
+                    weatherInfo.put(item.getCategory(), item.getFcstValue());
+                } else {
+                    Map<String, String> weatherInfo = new HashMap<>();
+                    weatherInfo.put(item.getCategory(), item.getFcstValue());
+                    dividedWeatherInfoMap.put(item.getFcstTime(), weatherInfo);
+                }
+            }
+
+            dividedList.add(WeatherDivideByTimeDto.builder()
+                    .weatherInfo(dividedWeatherInfoMap)
+                    .baseDate(LocalDate.parse(items.get(0).getBaseDate(), formatter))
+                    .region(collectData.getRegion())
+                    .build());
+        }
+        return dividedList;
+    }
+
+    private List<Weather> convertToEntityList(List<WeatherDivideByTimeDto> dataList) {
+        List<Weather> entityList = new LinkedList<>();
+        for (WeatherDivideByTimeDto data : dataList) {
+            List<Weather> weatherList = data.toEntityList();
+            entityList.addAll(weatherList);
+        }
+        return entityList;
     }
 }
