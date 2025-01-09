@@ -32,11 +32,20 @@ public class WeatherFacade {
         log.info("[Weather] Collect weather data of interest regions. complete, region cnt : {}, row cnt : {}", interestRegions.size(), weatherInfoList.size());
     }
 
-    public WeatherDetailDto getWeatherDetail(String reqRegion) {
-        // 지역 분리 후 region 테이블에서 찾기
+    public WeatherDetailDto getWeatherDetail(String reqRegion) throws URISyntaxException {
+        WeatherDetailDto weatherDetailInfo;
         Region region = regionService.getRegionForWeatherDetail(reqRegion);
-        WeatherDetailDto weatherDetailInfo = weatherService.getWeatherDetail(region);
-        //
-        return null;
+        log.debug("[Weather::Detail] Region code : {}", region.getCode());
+        boolean isCollectedWeatherOfRegion = weatherService.checkCollectedWeatherOfRegion(region);
+        log.debug("[Weather::Detail] Is Exists Weather of region : {}", isCollectedWeatherOfRegion);
+        if (isCollectedWeatherOfRegion) {
+            weatherDetailInfo = weatherService.getWeatherDetail(region);
+        } else {
+            List<Weather> weathers = weatherCrawler.collectWeatherData(region);
+            weatherService.saveData(weathers);
+            weatherDetailInfo = weatherService.convertWeatherDetailFromWeatherList(weathers, region);
+            log.info("[Weather] Collect weather data of interest regions. complete, row cnt : {}", weathers.size());
+        }
+        return weatherDetailInfo;
     }
 }

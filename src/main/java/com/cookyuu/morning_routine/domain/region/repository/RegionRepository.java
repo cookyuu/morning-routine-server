@@ -6,9 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface RegionRepository extends JpaRepository<Region, String> {
-    Optional<Region> findByThirdRegion(String thirdRegion);
 
-    Optional<Region> findByFirstRegion(String firstRegion);
-
-    Optional<Region> findBySecondRegion(String secondRegion);
+    Optional<Object> findByFirstRegionAndSecondRegionAndThirdRegion(String firstRegion, String secondRegion, String thirdRegion);
 }

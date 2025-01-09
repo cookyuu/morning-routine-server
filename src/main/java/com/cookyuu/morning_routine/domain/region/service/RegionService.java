@@ -24,8 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -100,8 +98,8 @@ public class RegionService {
                     .classification(classification)
                     .code(code)
                     .firstRegion(firstRegion)
-                    .secondRegion(secondRegion)
-                    .thirdRegion(thirdRegion)
+                    .secondRegion(secondRegion == null || secondRegion.isEmpty() ? null : secondRegion)
+                    .thirdRegion(thirdRegion == null || thirdRegion.isEmpty() ? null : thirdRegion)
                     .gridX(gridX)
                     .gridY(gridY)
                     .longitudeHour(longitudeHour)
@@ -142,13 +140,15 @@ public class RegionService {
     public Region getRegionForWeatherDetail(String reqRegion) {
         String[] splitRegions = reqRegion.split("\\+");
         int splitRegionDepth = splitRegions.length;
-
         if (splitRegionDepth==3 && specialRegionsList.contains(splitRegions[0])) {
-            return regionRepository.findByThirdRegion(splitRegions[2]).orElseThrow(MRRegionException::new);
+            log.debug("[Region] First : {}, Second : {}, Third : {}", splitRegions[0], splitRegions[1], splitRegions[2]);
+            return (Region) regionRepository.findByFirstRegionAndSecondRegionAndThirdRegion(splitRegions[0], splitRegions[1], splitRegions[2]).orElseThrow(MRRegionException::new);
         }
         if (splitRegionDepth==1) {
-            return regionRepository.findByFirstRegion(splitRegions[0]).orElseThrow(MRRegionException::new);
+            log.debug("[Region] First : {}", splitRegions[0]);
+            return (Region) regionRepository.findByFirstRegionAndSecondRegionAndThirdRegion(splitRegions[0], null, null).orElseThrow(MRRegionException::new);
         }
-        return regionRepository.findBySecondRegion(splitRegions[1]).orElseThrow(MRRegionException::new);
+        log.debug("[Region] First : {}, Second : {}", splitRegions[0], splitRegions[1]);
+        return (Region) regionRepository.findByFirstRegionAndSecondRegionAndThirdRegion(splitRegions[0], splitRegions[1], null).orElseThrow(MRRegionException::new);
     }
 }

@@ -54,7 +54,6 @@ public class WeatherCrawler {
         mm = mm.length() == 1 ? "0".concat(mm) : mm;
         dd = dd.length() == 1 ? "0".concat(dd) : dd;
         String baseDate = String.valueOf(now.getYear()).concat(mm).concat(dd);
-//        String baseDate = "20250109";
         String baseTime = "0500";
         String gridX = "";
         String gridY = "";
@@ -133,7 +132,6 @@ public class WeatherCrawler {
                     dividedWeatherInfoMap.put(item.getFcstTime(), weatherInfo);
                 }
             }
-
             dividedList.add(WeatherDivideByTimeDto.builder()
                     .weatherInfo(dividedWeatherInfoMap)
                     .baseDate(items.get(0).getBaseDate())
@@ -162,7 +160,6 @@ public class WeatherCrawler {
                 .region(collectData.getRegion())
                 .build();
     }
-
 
     private List<Weather> convertToEntityList(List<WeatherDivideByTimeDto> dataList) {
         List<Weather> entityList = new LinkedList<>();
