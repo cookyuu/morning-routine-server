@@ -1,6 +1,6 @@
 package com.cookyuu.morning_routine.domain.weather.controller;
 
-import com.cookyuu.morning_routine.domain.weather.dto.CollectWeatherInfo;
+import com.cookyuu.morning_routine.domain.weather.dto.WeatherDetailDto;
 import com.cookyuu.morning_routine.domain.weather.facade.WeatherFacade;
 import com.cookyuu.morning_routine.global.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +15,8 @@ public class WeatherController {
     private final WeatherFacade weatherFacade;
 
     @GetMapping
-    public ApiResponse<CollectWeatherInfo> getWeatherDetail(@RequestParam(name = "region") String region) {
-        CollectWeatherInfo collectWeatherInfo = weatherFacade.getWeatherDetail(region);
+    public ApiResponse<WeatherDetailDto> getWeatherDetail(@RequestParam(name = "region") String region) throws URISyntaxException {
+        WeatherDetailDto collectWeatherInfo = weatherFacade.getWeatherDetail(region);
         return ApiResponse.success(collectWeatherInfo);
     }
 

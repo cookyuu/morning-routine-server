@@ -22,6 +22,6 @@ public enum WeatherType {
     TMN("최저기온","°C")
     ;
 
-    private String name;
+    private String description;
     private String unit;
 }

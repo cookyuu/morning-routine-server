@@ -34,6 +34,9 @@ public class RegionService {
     @Value("${collector.region.path}")
     private String filePath;
 
+    static String[] specialRegions = {"서울특별시", "부산광역시", "대구광역시", "울산광역시", "인천광역시", "대전광역시", "광주광역시"};
+    static final List<String> specialRegionsList = List.of(specialRegions);
+
     private final RegionRepository regionRepository;
     private final RegionInterestRepository regionInterestRepository;
 
@@ -95,8 +98,8 @@ public class RegionService {
                     .classification(classification)
                     .code(code)
                     .firstRegion(firstRegion)
-                    .secondRegion(secondRegion)
-                    .thirdRegion(thirdRegion)
+                    .secondRegion(secondRegion == null || secondRegion.isEmpty() ? null : secondRegion)
+                    .thirdRegion(thirdRegion == null || thirdRegion.isEmpty() ? null : thirdRegion)
                     .gridX(gridX)
                     .gridY(gridY)
                     .longitudeHour(longitudeHour)
@@ -113,7 +116,7 @@ public class RegionService {
     }
 
     public List<Region> getInterestRegions() {
-        List<Region> regions = new ArrayList<>();
+        List<Region> regions;
         regions = regionInterestRepository.findAllDuplicatedRegion();
         return regions;
     }
@@ -122,6 +125,7 @@ public class RegionService {
         return regionRepository.findById(code).orElseThrow(MRRegionException::new);
     }
 
+    @Transactional
     public void registerInterestRegion(RegisterInterestRegionDto regionInfo, Member member) {
         Region region = findByCode(regionInfo.getCode());
         RegionInterest regionInterest = RegionInterest.builder()
@@ -131,5 +135,20 @@ public class RegionService {
         regionInterestRepository.save(regionInterest);
         log.debug("[Region] Register interest region complete.");
         log.debug("[Region] code : {}, first region name : {}", region.getCode(), region.getFirstRegion());
+    }
+
+    public Region getRegionForWeatherDetail(String reqRegion) {
+        String[] splitRegions = reqRegion.split("\\+");
+        int splitRegionDepth = splitRegions.length;
+        if (splitRegionDepth==3 && specialRegionsList.contains(splitRegions[0])) {
+            log.debug("[Region] First : {}, Second : {}, Third : {}", splitRegions[0], splitRegions[1], splitRegions[2]);
+            return (Region) regionRepository.findByFirstRegionAndSecondRegionAndThirdRegion(splitRegions[0], splitRegions[1], splitRegions[2]).orElseThrow(MRRegionException::new);
+        }
+        if (splitRegionDepth==1) {
+            log.debug("[Region] First : {}", splitRegions[0]);
+            return (Region) regionRepository.findByFirstRegionAndSecondRegionAndThirdRegion(splitRegions[0], null, null).orElseThrow(MRRegionException::new);
+        }
+        log.debug("[Region] First : {}, Second : {}", splitRegions[0], splitRegions[1]);
+        return (Region) regionRepository.findByFirstRegionAndSecondRegionAndThirdRegion(splitRegions[0], splitRegions[1], null).orElseThrow(MRRegionException::new);
     }
 }

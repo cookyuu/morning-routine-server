@@ -24,13 +24,13 @@ public class Region extends BaseTimeEntity {
     @Column(name = "classification")
     private String classification;
 
-    @Column(name = "first_region")
+    @Column(name = "first_region", nullable = false)
     private String firstRegion;
 
-    @Column(name = "second_region")
+    @Column(name = "second_region", nullable = true)
     private String secondRegion;
 
-    @Column(name = "third_region")
+    @Column(name = "third_region", nullable = true)
     private String thirdRegion;
 
     @Column(name = "grid_x")
