@@ -1,14 +1,11 @@
 package com.cookyuu.morning_routine.batch.crawling.weather;
 
 import com.cookyuu.morning_routine.domain.region.entity.Region;
-import com.cookyuu.morning_routine.domain.weather.entity.Weather;
-import com.cookyuu.morning_routine.domain.weather.entity.WeatherType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter

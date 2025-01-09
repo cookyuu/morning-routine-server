@@ -8,9 +8,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 @Entity
 @Getter
 @Builder
@@ -23,7 +20,7 @@ public class Weather extends BaseTimeEntity {
     @Column(name = "weather_id")
     private Long id;
     @Column(name = "base_date")
-    private LocalDate baseDate;
+    private String baseDate;
     @Column(name = "base_time")
     private String baseTime;
 
