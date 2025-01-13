@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -27,13 +28,25 @@ public class WeatherService {
 
     @Transactional(readOnly = true)
     public boolean checkCollectedWeatherOfRegion(Region region) {
-        String baseDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        LocalDateTime now = LocalDateTime.now();
+        String baseDate = "";
+        if (now.getHour() < 5) {
+            baseDate = now.minusDays(1).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        } else {
+            baseDate = now.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        }
         return weatherRepository.existsByRegionAndBaseDate(region, baseDate);
     }
 
     @Transactional(readOnly = true)
     public WeatherDetailDto getWeatherDetail(Region region) {
-        String baseDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        LocalDateTime now = LocalDateTime.now();
+        String baseDate = "";
+        if (now.getHour() < 5) {
+            baseDate = now.minusDays(1).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        } else {
+            baseDate = now.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        }
         List<Weather> weathers = weatherRepository.findAllByRegionAndBaseDateOrderByBaseTimeAsc(region, baseDate);
         return convertWeatherDetailFromWeatherList(weathers, region);
     }
@@ -51,18 +64,15 @@ public class WeatherService {
         StringBuilder sb = new StringBuilder();
         sb.append(region.getFirstRegion());
         String secondRegion = region.getSecondRegion();
-        String thirdRegion = region.getThirdRegion();
         if (!StringUtils.isBlank(secondRegion)) {
             sb.append(" ").append(region.getSecondRegion());
-        }
-        if (!StringUtils.isBlank(thirdRegion)) {
-            sb.append(" ").append(region.getThirdRegion());
         }
         String regionFullName = sb.toString();
         List<WeatherDetailDto.WeatherInfo> weatherInfoList = convertToWeatherInfoList(weathers);
         return WeatherDetailDto.builder()
                 .regionCode(region.getCode())
                 .regionFullName(regionFullName)
+                .baseDate(weathers.get(0).getBaseDate())
                 .weatherInfoList(weatherInfoList)
                 .build();
     }

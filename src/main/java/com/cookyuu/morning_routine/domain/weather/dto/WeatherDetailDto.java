@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -16,7 +15,7 @@ import java.util.List;
 public class WeatherDetailDto {
     private String regionCode;
     private String regionFullName;
-    private LocalDate baseDate;
+    private String baseDate;
     private List<WeatherInfo> weatherInfoList;
 
     @Getter

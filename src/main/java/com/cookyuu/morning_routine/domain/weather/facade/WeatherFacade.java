@@ -32,9 +32,9 @@ public class WeatherFacade {
         log.info("[Weather] Collect weather data of interest regions. complete, region cnt : {}, row cnt : {}", interestRegions.size(), weatherInfoList.size());
     }
 
-    public WeatherDetailDto getWeatherDetail(String reqRegion) throws URISyntaxException {
+    public WeatherDetailDto getWeatherDetail(int x, int y) throws URISyntaxException {
         WeatherDetailDto weatherDetailInfo;
-        Region region = regionService.getRegionForWeatherDetail(reqRegion);
+        Region region = regionService.getRegionForWeatherDetail(x, y);
         log.debug("[Weather::Detail] Region code : {}", region.getCode());
         boolean isCollectedWeatherOfRegion = weatherService.checkCollectedWeatherOfRegion(region);
         log.debug("[Weather::Detail] Is Exists Weather of region : {}", isCollectedWeatherOfRegion);
