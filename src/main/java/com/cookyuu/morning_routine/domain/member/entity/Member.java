@@ -1,15 +1,13 @@
 package com.cookyuu.morning_routine.domain.member.entity;
 
 import com.cookyuu.morning_routine.domain.region.entity.RegionInterest;
-import com.cookyuu.morning_routine.domain.stock.entity.StockInterest;
+import com.cookyuu.morning_routine.domain.stock.entity.StockWish;
 import com.cookyuu.morning_routine.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +54,7 @@ public class Member extends BaseTimeEntity {
     private List<RegionInterest> regionInterests = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
-    private List<StockInterest> stockInterests = new ArrayList<>();
+    private List<StockWish> stockWishes = new ArrayList<>();
 
     @Builder
     Member(String name, String loginId, String password, String email, String phoneNumber) {

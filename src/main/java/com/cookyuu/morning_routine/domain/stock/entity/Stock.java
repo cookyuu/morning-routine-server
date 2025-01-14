@@ -31,7 +31,7 @@ public class Stock extends BaseTimeEntity {
     private List<StockIndex> stockIndices = new ArrayList<>();
 
     @OneToMany(mappedBy = "stock")
-    private List<StockInterest> stockInterests = new ArrayList<>();
+    private List<StockWish> stockWishes = new ArrayList<>();
 
     @Builder
     public Stock(String symbol, String name, Country country) {
