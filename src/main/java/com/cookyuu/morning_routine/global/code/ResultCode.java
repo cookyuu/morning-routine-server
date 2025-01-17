@@ -51,6 +51,10 @@ public enum ResultCode {
     // Region
     REGION_NOT_FOUND(HttpStatus.NOT_FOUND, "R-001", "해당 지역 데이터를 찾을 수 없습니다."),
 
+    // Stock
+    STOCK_NOT_FOUND(HttpStatus.NOT_FOUND, "S-001", "등록되지 않은 주식입니다."),
+    WISH_STOCK_ALREADY(HttpStatus.BAD_REQUEST, "S-002" , "이미 관심 목록에 등록된 주식입니다."),
+
     // Collect
     CRAWLING_IS_FAIL(HttpStatus.BAD_REQUEST,"CW-001","크롤링 실패.");
 

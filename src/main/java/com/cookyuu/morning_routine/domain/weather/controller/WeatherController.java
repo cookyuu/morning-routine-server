@@ -15,8 +15,8 @@ public class WeatherController {
     private final WeatherFacade weatherFacade;
 
     @GetMapping
-    public ApiResponse<WeatherDetailDto> getWeatherDetail(@RequestParam(name = "region") String region) throws URISyntaxException {
-        WeatherDetailDto collectWeatherInfo = weatherFacade.getWeatherDetail(region);
+    public ApiResponse<WeatherDetailDto> getWeatherDetail(@RequestParam(name = "x") int x, @RequestParam(name = "y") int y) throws URISyntaxException {
+        WeatherDetailDto collectWeatherInfo = weatherFacade.getWeatherDetail(x, y);
         return ApiResponse.success(collectWeatherInfo);
     }
 

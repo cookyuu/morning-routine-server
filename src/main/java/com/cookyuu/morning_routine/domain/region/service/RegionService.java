@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -72,7 +73,7 @@ public class RegionService {
         int sheetCount = registerWorkBook.getNumberOfSheets();
         if (sheetCount < 1) {
             log.error("[Region::Register] Excel sheet is empty. ");
-            return null;
+            return Collections.emptyList();
         }
         XSSFSheet worksheet = registerWorkBook.getSheetAt(0);
 
@@ -137,18 +138,10 @@ public class RegionService {
         log.debug("[Region] code : {}, first region name : {}", region.getCode(), region.getFirstRegion());
     }
 
-    public Region getRegionForWeatherDetail(String reqRegion) {
-        String[] splitRegions = reqRegion.split("\\+");
-        int splitRegionDepth = splitRegions.length;
-        if (splitRegionDepth==3 && specialRegionsList.contains(splitRegions[0])) {
-            log.debug("[Region] First : {}, Second : {}, Third : {}", splitRegions[0], splitRegions[1], splitRegions[2]);
-            return (Region) regionRepository.findByFirstRegionAndSecondRegionAndThirdRegion(splitRegions[0], splitRegions[1], splitRegions[2]).orElseThrow(MRRegionException::new);
-        }
-        if (splitRegionDepth==1) {
-            log.debug("[Region] First : {}", splitRegions[0]);
-            return (Region) regionRepository.findByFirstRegionAndSecondRegionAndThirdRegion(splitRegions[0], null, null).orElseThrow(MRRegionException::new);
-        }
-        log.debug("[Region] First : {}, Second : {}", splitRegions[0], splitRegions[1]);
-        return (Region) regionRepository.findByFirstRegionAndSecondRegionAndThirdRegion(splitRegions[0], splitRegions[1], null).orElseThrow(MRRegionException::new);
+    @Transactional(readOnly = true)
+    public Region getRegionForWeatherDetail(int x, int y) {
+        Region region = regionRepository.findFirstOneByGridXAndGridYOrderByCodeDesc(x,y).orElseThrow(MRRegionException::new);
+        log.debug("[Region] First : {}, Second : {}", region.getFirstRegion(), region.getSecondRegion());
+        return region;
     }
 }

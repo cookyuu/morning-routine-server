@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.net.URISyntaxException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Slf4j
@@ -85,15 +86,24 @@ public class WeatherCrawler {
     private WeatherItemInfo collectFromOpenApi(Region region) throws URISyntaxException {
         WeatherItemInfo weatherItemInfo = new WeatherItemInfo();
         Map<String, String> paramMap = new HashMap<>();
-        LocalDate now = LocalDate.now();
-        String mm = String.valueOf(now.getMonthValue());
-        String dd = String.valueOf(now.getDayOfMonth());
+        LocalDateTime now = LocalDateTime.now();
+        String mm = "";
+        String dd = "";
+        String gridX = "";
+        String gridY = "";
+
+        if (now.getHour() < 5) {
+            mm = String.valueOf(now.minusDays(1).getMonthValue());
+            dd = String.valueOf(now.minusDays(1).getDayOfMonth());
+        } else {
+            mm = String.valueOf(now.getMonthValue());
+            dd = String.valueOf(now.getDayOfMonth());
+
+        }
         mm = mm.length() == 1 ? "0".concat(mm) : mm;
         dd = dd.length() == 1 ? "0".concat(dd) : dd;
         String baseDate = String.valueOf(now.getYear()).concat(mm).concat(dd);
         String baseTime = "0500";
-        String gridX = "";
-        String gridY = "";
         gridX = String.valueOf(region.getGridX());
         gridY = String.valueOf(region.getGridY());
 

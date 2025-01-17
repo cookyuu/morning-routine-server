@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface RegionRepository extends JpaRepository<Region, String> {
 
-    Optional<Object> findByFirstRegionAndSecondRegionAndThirdRegion(String firstRegion, String secondRegion, String thirdRegion);
+    Optional<Region> findFirstOneByGridXAndGridYOrderByCodeDesc(int x, int y);
 }

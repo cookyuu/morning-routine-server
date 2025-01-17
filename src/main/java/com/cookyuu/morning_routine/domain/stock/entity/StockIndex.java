@@ -13,7 +13,8 @@ import java.time.LocalDate;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "MR_STOCK_INDEX")
+@Table(name = "MR_STOCK_INDEX",
+        indexes = @Index(name = "idx_stock_index_1", columnList = "stock_symbol, priceBaseDate"))
 public class StockIndex extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,10 +28,10 @@ public class StockIndex extends BaseTimeEntity {
     private float oriClosingPrice;
 
     @Column(name = "ori_change_price")
-    private float oriPriceChange;
+    private float oriChangePrice;
 
     @Column(name = "ori_change_percent")
-    private float oriPercentChange;
+    private float oriChangePercent;
 
     @Column(name = "ori_has_positive_stock")
     private boolean oriHasPositiveStock;
@@ -58,11 +59,11 @@ public class StockIndex extends BaseTimeEntity {
     private Stock stock;
 
     @Builder
-    public StockIndex(Long marketCap, float oriClosingPrice, float oriPriceChange, float oriPercentChange, boolean oriHasPositiveStock, LocalDate priceBaseDate, Stock stock) {
+    public StockIndex(Long marketCap, float oriClosingPrice, float oriChangePrice, float oriChangePercent, boolean oriHasPositiveStock, LocalDate priceBaseDate, Stock stock) {
         this.marketCap = marketCap;
         this.oriClosingPrice = oriClosingPrice;
-        this.oriPriceChange = oriPriceChange;
-        this.oriPercentChange = oriPercentChange;
+        this.oriChangePrice = oriChangePrice;
+        this.oriChangePercent = oriChangePercent;
         this.oriHasPositiveStock = oriHasPositiveStock;
         this.priceBaseDate = priceBaseDate;
         this.stock = stock;
