@@ -11,19 +11,19 @@ import java.time.LocalDate;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class WishStockInfoDto {
+public class StockListInfoDto {
     private String symbol;
     private String name;
     private Country country;
     private Long marketCap;
-    private float oriClosingPrice;
-    private float oriPriceChange;
-    private float oriPercentChange;
+    private LocalDate priceBaseDate;
     private boolean oriHasPositiveStock;
+    private float oriClosingPrice;
+    private float oriPercentChange;
+    private float oriPriceChange;
     private boolean afterLoadCompleted;
+    private boolean afterHasPositiveStock;
     private float afterClosingPrice;
     private float afterChangePrice;
     private float afterChangePercent;
-    private boolean afterHasPositiveStock;
-    private LocalDate priceBaseDate;
 }

@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import static java.time.LocalDate.now;
 
@@ -80,8 +79,8 @@ public class StockInfoDto {
             return StockIndex.builder()
                     .marketCap(marketCap)
                     .oriClosingPrice(closingPrice)
-                    .oriPriceChange(priceChange)
-                    .oriPercentChange(percentChange)
+                    .oriChangePrice(priceChange)
+                    .oriChangePercent(percentChange)
                     .oriHasPositiveStock(hasPositiveStock)
                     .priceBaseDate(priceBaseDate)
                     .stock(stock)

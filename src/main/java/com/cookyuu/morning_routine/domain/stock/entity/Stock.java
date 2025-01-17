@@ -27,10 +27,10 @@ public class Stock extends BaseTimeEntity {
     @Column(name = "stock_country")
     private Country country;
 
-    @OneToMany(mappedBy = "stock")
+    @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<StockIndex> stockIndices = new ArrayList<>();
 
-    @OneToMany(mappedBy = "stock")
+    @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<StockWish> stockWishes = new ArrayList<>();
 
     @Builder

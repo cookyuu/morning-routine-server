@@ -9,7 +9,10 @@ import com.cookyuu.morning_routine.domain.stock.service.StockService;
 import com.cookyuu.morning_routine.domain.stock.service.StockWishService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -24,12 +27,12 @@ public class StockWishFacade {
         stockWishService.addStockWishList(member, stock);
     }
 
-    public Page<StockListInfoDto> getWishList(long userId) {
-        // wish list에 있는 user의 주식 데이터를 가지고 온다.
-        // stock, stockIndex 데이터 가지고 오기
-        // 가장 최근 데이터 가지고 오기
-
-        return null;
+    public Page<StockListInfoDto> getWishList(Long userId, Pageable pageable) {
+        Member member = memberService.getMemberById(userId);
+        return stockWishService.getWishList(member, pageable);
     }
 
+    public List<StockListInfoDto> getTopFiveList() {
+        return stockService.getTopFiveStock();
+    }
 }

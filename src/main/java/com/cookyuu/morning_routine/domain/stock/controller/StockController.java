@@ -3,6 +3,7 @@ package com.cookyuu.morning_routine.domain.stock.controller;
 import com.cookyuu.morning_routine.domain.stock.dto.AddWishStockInfoDto;
 import com.cookyuu.morning_routine.domain.stock.dto.StockListInfoDto;
 import com.cookyuu.morning_routine.domain.stock.entity.Country;
+import com.cookyuu.morning_routine.domain.stock.entity.Stock;
 import com.cookyuu.morning_routine.domain.stock.facade.StockCrawlingFacade;
 import com.cookyuu.morning_routine.domain.stock.facade.StockWishFacade;
 import com.cookyuu.morning_routine.global.dto.ApiResponse;
@@ -11,8 +12,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -36,9 +41,15 @@ public class StockController {
     }
 
     @GetMapping("/my/wishlist")
-    public ApiResponse<Page<StockListInfoDto>> getStockWishList(@AuthenticationPrincipal CustomUserDetails user) {
-        Page<StockListInfoDto> resWishStockData = stockWishFacade.getWishList(Long.parseLong(user.getUsername()));
-        return ApiResponse.success();
+    public ApiResponse<List<StockListInfoDto>> getStockWishList(@AuthenticationPrincipal CustomUserDetails user, @PageableDefault(page = 0, size = 5) Pageable pageable) {
+        Page<StockListInfoDto> resWishStockData = stockWishFacade.getWishList(Long.parseLong(user.getUsername()), pageable);
+        return ApiResponse.success(resWishStockData);
+    }
+
+    @GetMapping("/top-five")
+    public ApiResponse<List<StockListInfoDto>> getStockTopFiveList() {
+        List<StockListInfoDto> resStockList = stockWishFacade.getTopFiveList();
+        return ApiResponse.success(resStockList);
     }
 
 }
