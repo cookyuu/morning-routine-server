@@ -1,4 +1,4 @@
-package com.cookyuu.morning_routine.batch.crawling.indicators;
+package com.cookyuu.morning_routine.batch.crawling.indicators.data;
 
 import com.cookyuu.morning_routine.domain.indicators.entity.IndicatorsSymbol;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
