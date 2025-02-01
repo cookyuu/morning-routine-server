@@ -1,10 +1,8 @@
 package com.cookyuu.morning_routine.batch.config;
 
-import com.cookyuu.morning_routine.batch.crawling.indicators.tasklet.IndicatorsCrawlingTasklet;
-import com.cookyuu.morning_routine.batch.crawling.step.IndicatorsCrawlingStep;
+import com.cookyuu.morning_routine.batch.crawling.indicators.step.IndicatorsCrawlingStep;
+import com.cookyuu.morning_routine.batch.crawling.stock.step.StockCrawlingStep;
 import com.cookyuu.morning_routine.batch.crawling.stock.tasklet.StockCrawlingTasklet;
-import com.cookyuu.morning_routine.domain.indicators.entity.IndicatorsType;
-import com.cookyuu.morning_routine.domain.indicators.facade.IndicatorsCrawlingFacade;
 import com.cookyuu.morning_routine.domain.stock.entity.Country;
 import com.cookyuu.morning_routine.domain.stock.facade.StockCrawlingFacade;
 import lombok.RequiredArgsConstructor;
@@ -20,13 +18,13 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Configuration
 @RequiredArgsConstructor
 public class CrawlingJobConfig {
-    private final StockCrawlingFacade stockCrawlingFacade;
     private final IndicatorsCrawlingStep indicatorsCrawlingStep;
+    private final StockCrawlingStep stockCrawlingStep;
 
     @Bean(name = "usStockCrawlingJob")
     public Job usStockCrawlingJob(JobRepository jobRepository, PlatformTransactionManager platformTransactionManager) {
         return new JobBuilder("usStockCrawlingJob", jobRepository)
-                .start(stockCrawlingStep(jobRepository, platformTransactionManager, Country.US))
+                .start(stockCrawlingStep.usStockCrawlingStep(jobRepository, platformTransactionManager))
                 .build();
     }
 
@@ -51,14 +49,6 @@ public class CrawlingJobConfig {
                 .build();
     }
 
-    @Bean
-    public Step stockCrawlingStep(JobRepository jobRepository, PlatformTransactionManager platformTransactionManager, Country country) {
-        StockCrawlingTasklet stockCrawlingTasklet = new StockCrawlingTasklet(stockCrawlingFacade);
-        stockCrawlingTasklet.setCountry(country);
-        return new StepBuilder("stockCrawlingStep", jobRepository)
-                .tasklet(stockCrawlingTasklet, platformTransactionManager)
-                .build();
-    }
 
     @Bean(name = "coinIndicatorsCrawlingJob")
     public Job coinIndicatorsCrawlingJob(JobRepository jobRepository, PlatformTransactionManager platformTransactionManager) {

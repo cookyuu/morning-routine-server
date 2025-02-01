@@ -1,4 +1,4 @@
-package com.cookyuu.morning_routine.batch.crawling.step;
+package com.cookyuu.morning_routine.batch.crawling.indicators.step;
 
 import com.cookyuu.morning_routine.batch.crawling.indicators.tasklet.IndicatorsCrawlingTasklet;
 import com.cookyuu.morning_routine.domain.indicators.entity.IndicatorsType;
