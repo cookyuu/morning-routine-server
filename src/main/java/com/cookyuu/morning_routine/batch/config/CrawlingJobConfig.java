@@ -1,6 +1,7 @@
 package com.cookyuu.morning_routine.batch.config;
 
 import com.cookyuu.morning_routine.batch.crawling.indicators.tasklet.IndicatorsCrawlingTasklet;
+import com.cookyuu.morning_routine.batch.crawling.step.IndicatorsCrawlingStep;
 import com.cookyuu.morning_routine.batch.crawling.stock.tasklet.StockCrawlingTasklet;
 import com.cookyuu.morning_routine.domain.indicators.entity.IndicatorsType;
 import com.cookyuu.morning_routine.domain.indicators.facade.IndicatorsCrawlingFacade;
@@ -20,7 +21,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 @RequiredArgsConstructor
 public class CrawlingJobConfig {
     private final StockCrawlingFacade stockCrawlingFacade;
-    private final IndicatorsCrawlingFacade indicatorsCrawlingFacade;
+    private final IndicatorsCrawlingStep indicatorsCrawlingStep;
 
     @Bean(name = "usStockCrawlingJob")
     public Job usStockCrawlingJob(JobRepository jobRepository, PlatformTransactionManager platformTransactionManager) {
@@ -32,7 +33,14 @@ public class CrawlingJobConfig {
     @Bean(name = "stockIndicatorsCrawlingJob")
     public Job stockIndicatorsCrawlingJob(JobRepository jobRepository, PlatformTransactionManager platformTransactionManager) {
         return new JobBuilder("stockIndicatorsCrawlingJob", jobRepository)
-                .start(indicatorsCrawlingStep(jobRepository, platformTransactionManager, IndicatorsType.STOCK))
+                .start(indicatorsCrawlingStep.stockIndicatorsCrawlingStep(jobRepository, platformTransactionManager))
+                .build();
+    }
+
+    @Bean(name = "exchangeIndicatorsCrawlingJob")
+    public Job exchangeIndicatorsCrawlingJob(JobRepository jobRepository, PlatformTransactionManager platformTransactionManager) {
+        return new JobBuilder("exchangeIndicatorsCrawlingJob", jobRepository)
+                .start(indicatorsCrawlingStep.exchangeIndicatorsCrawlingStep(jobRepository, platformTransactionManager))
                 .build();
     }
 
@@ -45,12 +53,5 @@ public class CrawlingJobConfig {
                 .build();
     }
 
-    @Bean
-    public Step indicatorsCrawlingStep(JobRepository jobRepository, PlatformTransactionManager platformTransactionManager, IndicatorsType indicatorsType) {
-        IndicatorsCrawlingTasklet indicatorsCrawlingTasklet = new IndicatorsCrawlingTasklet(indicatorsCrawlingFacade);
-        indicatorsCrawlingTasklet.setIndicatorsType(indicatorsType);
-        return new StepBuilder("indicatorsCrawlingStep", jobRepository)
-                .tasklet(indicatorsCrawlingTasklet, platformTransactionManager)
-                .build();
-    }
+
 }

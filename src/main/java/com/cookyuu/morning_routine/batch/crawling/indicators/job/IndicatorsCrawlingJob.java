@@ -31,14 +31,28 @@ public class IndicatorsCrawlingJob {
     @Scheduled(cron = "0 01 06 * * ?")
     public void stockIndicatorsCrawlingJob() {
         try {
-            log.info("[Batch-StockCrawling] Stock Indicators crawling job start, datetime : {} ", LocalDateTime.now());
+            log.info("[Batch-Crawling] Stock Indicators crawling job start, datetime : {} ", LocalDateTime.now());
             jobLauncher.run(
                     crawlingJobConfig.stockIndicatorsCrawlingJob(jobRepository, platformTransactionManager),
                     new JobParametersBuilder().addString("dataTime", LocalDateTime.now().toString()).toJobParameters()
             );
         } catch (JobInstanceAlreadyCompleteException | JobExecutionAlreadyRunningException |
                  JobParametersInvalidException | JobRestartException e) {
-            log.error("[USStockCrawlingJob] Exception : " + e);
+            log.error("[StockIndicatorsCrawlingJob] Exception : " + e);
+        }
+    }
+
+    @Scheduled(cron = "0 01 06 * * ?")
+    public void exchangeIndicatorsCrawlingJob() {
+        try {
+            log.info("[Batch-Crawling] Exchange Indicators crawling job start, datetime : {} ", LocalDateTime.now());
+            jobLauncher.run(
+                    crawlingJobConfig.exchangeIndicatorsCrawlingJob(jobRepository, platformTransactionManager),
+                    new JobParametersBuilder().addString("dataTime", LocalDateTime.now().toString()).toJobParameters()
+            );
+        } catch (JobInstanceAlreadyCompleteException | JobExecutionAlreadyRunningException |
+                 JobParametersInvalidException | JobRestartException e) {
+            log.error("[ExchangeIndicatorsCrawlingJob] Exception : " + e);
         }
     }
 }

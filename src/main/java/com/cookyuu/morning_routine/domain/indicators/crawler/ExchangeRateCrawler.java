@@ -40,10 +40,7 @@ public class ExchangeRateCrawler implements IndicatorsCrawler {
         String crawlingResData = restClientUtils.httpCallGetJsonString(exchangeRateIndicatorsUrl);
         log.info("Data : {}", crawlingResData);
         ObjectMapper objectMapper = new ObjectMapper();
-        ExchangeItemInfo resCrawlingData = objectMapper.readValue(crawlingResData, ExchangeItemInfo.class);
-        log.info("[Crwaling::Exchange] data : {}", resCrawlingData.getDataAsOf());
-        log.info("[Crawling::Exchange] data : {}", resCrawlingData.getConversions().get("USD").getKRW());
-        return resCrawlingData;
+        return objectMapper.readValue(crawlingResData, ExchangeItemInfo.class);
     }
 
     private List<IndicatorsInfoDto> convertToIndicatorsInfoList(ExchangeItemInfo crawlingData) {

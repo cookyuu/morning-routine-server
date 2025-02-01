@@ -95,7 +95,7 @@ public class StockIndicatorsCrawler implements IndicatorsCrawler {
                     .hasPositivePrice(hasPositivePrice)
                     .asOfDate(asOfDate)
                     .build();
-            log.info("name : {}, endPrice : {}, changePrcie : {}, changePct : {}, hasPositive :{}, asOfDate : {}", name, endPrice, changePrice, changePct, hasPositivePrice, asOfDate);
+//            log.debug("name : {}, endPrice : {}, changePrcie : {}, changePct : {}, hasPositive :{}, asOfDate : {}", name, endPrice, changePrice, changePct, hasPositivePrice, asOfDate);
             crawlingDataList.add(stockItemInfo);
         }
         return crawlingDataList;
