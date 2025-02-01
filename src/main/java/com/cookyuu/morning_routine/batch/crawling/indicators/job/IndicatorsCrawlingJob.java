@@ -1,4 +1,4 @@
-package com.cookyuu.morning_routine.batch.crawling.stock.job;
+package com.cookyuu.morning_routine.batch.crawling.indicators.job;
 
 import com.cookyuu.morning_routine.batch.config.CrawlingJobConfig;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 @Component
 @RequiredArgsConstructor
 @EnableScheduling
-public class StockCrawlingJob {
+public class IndicatorsCrawlingJob {
     private final JobLauncher jobLauncher;
     private final CrawlingJobConfig crawlingJobConfig;
 
@@ -29,11 +29,11 @@ public class StockCrawlingJob {
     private final PlatformTransactionManager platformTransactionManager;
 
     @Scheduled(cron = "0 01 06 * * ?")
-    public void usStockCrawlingJob() {
+    public void stockIndicatorsCrawlingJob() {
         try {
-            log.info("[Batch-StockCrawling] Stock crawling job start, datetime : {} ", LocalDateTime.now());
+            log.info("[Batch-StockCrawling] Stock Indicators crawling job start, datetime : {} ", LocalDateTime.now());
             jobLauncher.run(
-                    crawlingJobConfig.usStockCrawlingJob(jobRepository, platformTransactionManager),
+                    crawlingJobConfig.stockIndicatorsCrawlingJob(jobRepository, platformTransactionManager),
                     new JobParametersBuilder().addString("dataTime", LocalDateTime.now().toString()).toJobParameters()
             );
         } catch (JobInstanceAlreadyCompleteException | JobExecutionAlreadyRunningException |

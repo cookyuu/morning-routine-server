@@ -18,7 +18,7 @@ public class IndicatorsCrawlingFacade {
     private final IndicatorsCrawlingServiceFactory indicatorsCrawlingServiceFactory;
     private final IndicatorsCrawlerFactory indicatorsCrawlerFactory;
 
-    public void crawlingStock(IndicatorsType indicatorsType) throws JsonProcessingException {
+    public void crawlingIndicators(IndicatorsType indicatorsType) throws JsonProcessingException {
         IndicatorsCrawler indicatorsCrawler = indicatorsCrawlerFactory.getCrawler(indicatorsType);
         IndicatorsCrawlingService indicatorsCrawlingService = indicatorsCrawlingServiceFactory.getService(indicatorsType);
         List<IndicatorsInfoDto> dataList = indicatorsCrawler.crawlingIndicators();
