@@ -1,8 +1,7 @@
 package com.cookyuu.morning_routine.domain.indicators.crawler;
 
-import com.cookyuu.morning_routine.batch.crawling.indicators.ExchangeItemInfo;
+import com.cookyuu.morning_routine.batch.crawling.indicators.data.ExchangeItemInfo;
 import com.cookyuu.morning_routine.domain.indicators.dto.IndicatorsInfoDto;
-import com.cookyuu.morning_routine.domain.indicators.entity.Indicators;
 import com.cookyuu.morning_routine.domain.indicators.entity.IndicatorsSymbol;
 import com.cookyuu.morning_routine.domain.indicators.entity.IndicatorsType;
 import com.cookyuu.morning_routine.global.utils.RestClientUtils;
@@ -41,10 +40,7 @@ public class ExchangeRateCrawler implements IndicatorsCrawler {
         String crawlingResData = restClientUtils.httpCallGetJsonString(exchangeRateIndicatorsUrl);
         log.info("Data : {}", crawlingResData);
         ObjectMapper objectMapper = new ObjectMapper();
-        ExchangeItemInfo resCrawlingData = objectMapper.readValue(crawlingResData, ExchangeItemInfo.class);
-        log.info("[Crwaling::Exchange] data : {}", resCrawlingData.getDataAsOf());
-        log.info("[Crawling::Exchange] data : {}", resCrawlingData.getConversions().get("USD").getKRW());
-        return resCrawlingData;
+        return objectMapper.readValue(crawlingResData, ExchangeItemInfo.class);
     }
 
     private List<IndicatorsInfoDto> convertToIndicatorsInfoList(ExchangeItemInfo crawlingData) {

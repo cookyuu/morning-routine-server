@@ -1,4 +1,4 @@
-package com.cookyuu.morning_routine.batch.crawling.stock;
+package com.cookyuu.morning_routine.batch.crawling.stock.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

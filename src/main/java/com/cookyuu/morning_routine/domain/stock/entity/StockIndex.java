@@ -51,6 +51,10 @@ public class StockIndex extends BaseTimeEntity {
     @Column(name = "after_has_positive_stock")
     private boolean afterHasPositiveStock;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "country")
+    private Country country;
+
     @Column(name = "price_base_date")
     private LocalDate priceBaseDate;
 
@@ -59,13 +63,14 @@ public class StockIndex extends BaseTimeEntity {
     private Stock stock;
 
     @Builder
-    public StockIndex(Long marketCap, float oriClosingPrice, float oriChangePrice, float oriChangePercent, boolean oriHasPositiveStock, LocalDate priceBaseDate, Stock stock) {
+    public StockIndex(Long marketCap, float oriClosingPrice, float oriChangePrice, float oriChangePercent, boolean oriHasPositiveStock, LocalDate priceBaseDate, Country country, Stock stock) {
         this.marketCap = marketCap;
         this.oriClosingPrice = oriClosingPrice;
         this.oriChangePrice = oriChangePrice;
         this.oriChangePercent = oriChangePercent;
         this.oriHasPositiveStock = oriHasPositiveStock;
         this.priceBaseDate = priceBaseDate;
+        this.country = country;
         this.stock = stock;
     }
 }

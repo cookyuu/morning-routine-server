@@ -1,7 +1,7 @@
 package com.cookyuu.morning_routine.domain.indicators.crawler;
 
 import com.cookyuu.morning_routine.domain.indicators.dto.IndicatorsInfoDto;
-import com.cookyuu.morning_routine.batch.crawling.indicators.StockItemInfo;
+import com.cookyuu.morning_routine.batch.crawling.indicators.data.StockItemInfo;
 import com.cookyuu.morning_routine.domain.indicators.entity.IndicatorsSymbol;
 import com.cookyuu.morning_routine.domain.indicators.entity.IndicatorsType;
 import com.cookyuu.morning_routine.global.code.ResultCode;
@@ -95,7 +95,7 @@ public class StockIndicatorsCrawler implements IndicatorsCrawler {
                     .hasPositivePrice(hasPositivePrice)
                     .asOfDate(asOfDate)
                     .build();
-            log.info("name : {}, endPrice : {}, changePrcie : {}, changePct : {}, hasPositive :{}, asOfDate : {}", name, endPrice, changePrice, changePct, hasPositivePrice, asOfDate);
+//            log.debug("name : {}, endPrice : {}, changePrcie : {}, changePct : {}, hasPositive :{}, asOfDate : {}", name, endPrice, changePrice, changePct, hasPositivePrice, asOfDate);
             crawlingDataList.add(stockItemInfo);
         }
         return crawlingDataList;

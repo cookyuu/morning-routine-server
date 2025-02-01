@@ -32,6 +32,11 @@ spring:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT}
 
+  batch:
+    initialize-schema: always
+    job:
+      enabled: false
+
 auth:
   jwt:
     secret: ${JWT_SECRET}
@@ -45,5 +50,5 @@ auth:
 logging:
   level:
     com.cookyuu.ecms_server: debug
-    org.hibernate.SQL: debug
+    org.hibernate.SQL: info
     org.hibernate.type: trace

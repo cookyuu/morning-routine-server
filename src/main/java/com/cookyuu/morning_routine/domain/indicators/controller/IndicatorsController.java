@@ -19,7 +19,7 @@ public class IndicatorsController {
 
     @GetMapping("/crawling")
     public ApiResponse<String> crawlingIndicators(@RequestParam IndicatorsType type) throws JsonProcessingException {
-        indicatorsCrawlingFacade.crawlingStock(type);
+        indicatorsCrawlingFacade.crawlingIndicators(type);
         return ApiResponse.success();
     }
 }

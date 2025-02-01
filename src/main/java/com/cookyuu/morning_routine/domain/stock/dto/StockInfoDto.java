@@ -83,6 +83,7 @@ public class StockInfoDto {
                     .oriChangePercent(percentChange)
                     .oriHasPositiveStock(hasPositiveStock)
                     .priceBaseDate(priceBaseDate)
+                    .country(stock.getCountry())
                     .stock(stock)
                     .build();
         }

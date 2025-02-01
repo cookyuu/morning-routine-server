@@ -1,7 +1,6 @@
 package com.cookyuu.morning_routine.domain.indicators.crawler;
 
-import com.cookyuu.morning_routine.batch.crawling.indicators.CoinItemInfo;
-import com.cookyuu.morning_routine.batch.crawling.indicators.MaterialItemInfo;
+import com.cookyuu.morning_routine.batch.crawling.indicators.data.MaterialItemInfo;
 import com.cookyuu.morning_routine.domain.indicators.dto.IndicatorsInfoDto;
 import com.cookyuu.morning_routine.domain.indicators.entity.IndicatorsSymbol;
 import com.cookyuu.morning_routine.domain.indicators.entity.IndicatorsType;

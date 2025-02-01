@@ -1,22 +1,21 @@
-package com.cookyuu.morning_routine.batch.crawling.indicators;
+package com.cookyuu.morning_routine.batch.crawling.indicators.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CoinItemInfo {
-    private String symbol;
+public class StockItemInfo {
     private String name;
-    private double price;
+    private double endPrice;
+    private double highestPrice;
+    private double lowestPrice;
     private double changePrice;
     private double changePct;
     private boolean hasPositivePrice;
-    private LocalDate asOfDate;
+    private String asOfDate;
 }
