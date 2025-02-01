@@ -44,6 +44,13 @@ public class CrawlingJobConfig {
                 .build();
     }
 
+    @Bean(name = "materialIndicatorsCrawlingJob")
+    public Job materialIndicatorsCrawlingJob(JobRepository jobRepository, PlatformTransactionManager platformTransactionManager) {
+        return new JobBuilder("materialIndicatorsCrawlingJob", jobRepository)
+                .start(indicatorsCrawlingStep.materialIndicatorsCrawlingStep(jobRepository, platformTransactionManager))
+                .build();
+    }
+
     @Bean
     public Step stockCrawlingStep(JobRepository jobRepository, PlatformTransactionManager platformTransactionManager, Country country) {
         StockCrawlingTasklet stockCrawlingTasklet = new StockCrawlingTasklet(stockCrawlingFacade);
@@ -52,6 +59,5 @@ public class CrawlingJobConfig {
                 .tasklet(stockCrawlingTasklet, platformTransactionManager)
                 .build();
     }
-
 
 }

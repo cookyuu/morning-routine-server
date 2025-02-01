@@ -55,6 +55,20 @@ public class IndicatorsCrawlingJob {
             log.error("[ExchangeIndicatorsCrawlingJob] Exception : " + e);
         }
     }
+
+    @Scheduled(cron = "0 01 06 * * ?")
+    public void materialIndicatorsCrawlingJob() {
+        try {
+            log.info("[Batch-Crawling] Material Indicators crawling job start, datetime : {} ", LocalDateTime.now());
+            jobLauncher.run(
+                    crawlingJobConfig.materialIndicatorsCrawlingJob(jobRepository, platformTransactionManager),
+                    new JobParametersBuilder().addString("dataTime", LocalDateTime.now().toString()).toJobParameters()
+            );
+        } catch (JobInstanceAlreadyCompleteException | JobExecutionAlreadyRunningException |
+                 JobParametersInvalidException | JobRestartException e) {
+            log.error("[MaterialIndicatorsCrawlingJob] Exception : " + e);
+        }
+    }
 }
 
 

@@ -21,7 +21,7 @@ public class IndicatorsCrawlingStep {
     public Step stockIndicatorsCrawlingStep(JobRepository jobRepository, PlatformTransactionManager platformTransactionManager) {
         IndicatorsCrawlingTasklet indicatorsCrawlingTasklet = new IndicatorsCrawlingTasklet(indicatorsCrawlingFacade);
         indicatorsCrawlingTasklet.setIndicatorsType(IndicatorsType.STOCK);
-        return new StepBuilder("indicatorsCrawlingStep", jobRepository)
+        return new StepBuilder("stockIndicatorsCrawlingStep", jobRepository)
                 .tasklet(indicatorsCrawlingTasklet, platformTransactionManager)
                 .build();
     }
@@ -30,7 +30,16 @@ public class IndicatorsCrawlingStep {
     public Step exchangeIndicatorsCrawlingStep(JobRepository jobRepository, PlatformTransactionManager platformTransactionManager) {
         IndicatorsCrawlingTasklet indicatorsCrawlingTasklet = new IndicatorsCrawlingTasklet(indicatorsCrawlingFacade);
         indicatorsCrawlingTasklet.setIndicatorsType(IndicatorsType.EXCHANGE_RATE);
-        return new StepBuilder("indicatorsCrawlingStep", jobRepository)
+        return new StepBuilder("exchangeIndicatorsCrawlingStep", jobRepository)
+                .tasklet(indicatorsCrawlingTasklet, platformTransactionManager)
+                .build();
+    }
+
+    @Bean
+    public Step materialIndicatorsCrawlingStep(JobRepository jobRepository, PlatformTransactionManager platformTransactionManager) {
+        IndicatorsCrawlingTasklet indicatorsCrawlingTasklet = new IndicatorsCrawlingTasklet(indicatorsCrawlingFacade);
+        indicatorsCrawlingTasklet.setIndicatorsType(IndicatorsType.RAW_MATERIAL);
+        return new StepBuilder("materialIndicatorsCrawlingStep", jobRepository)
                 .tasklet(indicatorsCrawlingTasklet, platformTransactionManager)
                 .build();
     }
