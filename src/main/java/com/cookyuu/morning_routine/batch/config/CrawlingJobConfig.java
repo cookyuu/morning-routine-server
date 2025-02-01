@@ -60,4 +60,10 @@ public class CrawlingJobConfig {
                 .build();
     }
 
+    @Bean(name = "coinIndicatorsCrawlingJob")
+    public Job coinIndicatorsCrawlingJob(JobRepository jobRepository, PlatformTransactionManager platformTransactionManager) {
+        return new JobBuilder("coinIndicatorsCrawlingJob", jobRepository)
+                .start(indicatorsCrawlingStep.coinIndicatorsCrawlingStep(jobRepository, platformTransactionManager))
+                .build();
+    }
 }

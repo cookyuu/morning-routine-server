@@ -43,4 +43,13 @@ public class IndicatorsCrawlingStep {
                 .tasklet(indicatorsCrawlingTasklet, platformTransactionManager)
                 .build();
     }
+
+    @Bean
+    public Step coinIndicatorsCrawlingStep(JobRepository jobRepository, PlatformTransactionManager platformTransactionManager) {
+        IndicatorsCrawlingTasklet indicatorsCrawlingTasklet = new IndicatorsCrawlingTasklet(indicatorsCrawlingFacade);
+        indicatorsCrawlingTasklet.setIndicatorsType(IndicatorsType.COIN);
+        return new StepBuilder("coinIndicatorsCrawlingStep", jobRepository)
+                .tasklet(indicatorsCrawlingTasklet, platformTransactionManager)
+                .build();
+    }
 }

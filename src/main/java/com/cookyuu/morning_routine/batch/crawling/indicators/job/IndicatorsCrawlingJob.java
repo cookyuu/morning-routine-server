@@ -69,6 +69,20 @@ public class IndicatorsCrawlingJob {
             log.error("[MaterialIndicatorsCrawlingJob] Exception : " + e);
         }
     }
+
+    @Scheduled(cron = "0 01 06 * * ?")
+    public void coinIndicatorsCrawlingJob() {
+        try {
+            log.info("[Batch-Crawling] Coin Indicators crawling job start, datetime : {} ", LocalDateTime.now());
+            jobLauncher.run(
+                    crawlingJobConfig.coinIndicatorsCrawlingJob(jobRepository, platformTransactionManager),
+                    new JobParametersBuilder().addString("dataTime", LocalDateTime.now().toString()).toJobParameters()
+            );
+        } catch (JobInstanceAlreadyCompleteException | JobExecutionAlreadyRunningException |
+                 JobParametersInvalidException | JobRestartException e) {
+            log.error("[CoinIndicatorsCrawlingJob] Exception : " + e);
+        }
+    }
 }
 
 
