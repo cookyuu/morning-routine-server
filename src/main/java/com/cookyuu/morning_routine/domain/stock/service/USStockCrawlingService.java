@@ -1,6 +1,7 @@
 package com.cookyuu.morning_routine.domain.stock.service;
 
-import com.cookyuu.morning_routine.batch.crawling.stock.USStockItemInfo;
+import com.cookyuu.morning_routine.batch.crawling.stock.data.USStockItemInfo;
+import com.cookyuu.morning_routine.domain.indicators.entity.IndicatorsType;
 import com.cookyuu.morning_routine.domain.stock.dto.StockInfoDto;
 import com.cookyuu.morning_routine.domain.stock.entity.Country;
 import com.cookyuu.morning_routine.domain.stock.entity.Stock;
@@ -67,5 +68,10 @@ public class USStockCrawlingService implements StockCrawlingService{
         stockInfo.getCrawlingInfo().setCrawlingInfo(stockData.getSymbol(), stockData.getName(), Country.US);
         stockInfo.getCrawlingIndexInfo().setCrawlingInfo(stockData.getMarketCap(), stockData.getLastsale(), stockData.getNetchange(), stockData.getPctchange());
         return stockInfo;
+    }
+
+    @Override
+    public Country getCountryType() {
+        return Country.US;
     }
 }
