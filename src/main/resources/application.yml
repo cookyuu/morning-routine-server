@@ -1,7 +1,29 @@
 spring:
+  config:
+    import:
+      - optional:file:env/global.env[.properties]
   spring:
     application:
       name: morning-routine-server
 
   profiles:
     default: dev
+
+collector:
+  us-stock:
+    url: ${US_STOCK_URL}
+  exchange:
+    url: ${EXCHANGE_RATE_INDICATORS_URL}
+  stock-indicators:
+    url: ${STOCK_INDICATORS_URL}
+  coin:
+    url: ${COIN_INDICATORS_URL}
+  material:
+    url: ${MATERIAL_INDICATORS_URL}
+  region:
+    path: ${REGION_FILE_PATH}
+  weather:
+    url: ${WEATHER_OPEN_API_URL}
+    service-key: ${WEATHER_OPEN_API_SERVICE_KEY}
+    rows-num: ${WEATHER_OPEN_API_ROWS_NUM}
+    type: JSON

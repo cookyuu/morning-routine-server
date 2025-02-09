@@ -38,3 +38,5 @@ out/
 .vscode/
 
 env/*
+src/main/resources/templates/**
+.DS_Store
